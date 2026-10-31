@@ -3,17 +3,43 @@
 
 import { useState, useEffect, useTransition } from 'react';
 import Link from 'next/link';
-import { filterPractitioners } from '@/lib/astronomy';
+import { filterPractitioners, sortPractitioners } from '@/lib/astronomy';
 
 export default function PractitionersDirectoryPage() {
   const [practitioners, setPractitioners] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Filter criteria in React state
+  // Filter & sort criteria in React state, synchronized with URL (Module 09 Stretch requirement)
   const [selectedLanguage, setSelectedLanguage] = useState('');
   const [selectedSpecialism, setSelectedSpecialism] = useState('');
+  const [sortBy, setSortBy] = useState('');
   const [, startTransition] = useTransition();
+
+  // Read initial sort from URL parameters on mount
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      const urlSort = params.get('sort');
+      if (urlSort) {
+        setSortBy(urlSort);
+      }
+    }
+  }, []);
+
+  const handleSortChange = (e) => {
+    const nextSort = e.target.value;
+    setSortBy(nextSort);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      if (nextSort) {
+        url.searchParams.set('sort', nextSort);
+      } else {
+        url.searchParams.delete('sort');
+      }
+      window.history.replaceState({}, '', url.toString());
+    }
+  };
 
   // Load practitioners from our API route
   async function fetchPractitioners() {
@@ -47,6 +73,8 @@ export default function PractitionersDirectoryPage() {
     specialism: selectedSpecialism,
   });
 
+  const displayedPractitioners = sortPractitioners(filteredPractitioners, sortBy);
+
   // Extract unique languages and specialisms for filter dropdowns
   const availableLanguages = Array.from(
     new Set(practitioners.flatMap((p) => p.languages || []))
@@ -60,6 +88,12 @@ export default function PractitionersDirectoryPage() {
     startTransition(() => {
       setSelectedLanguage('');
       setSelectedSpecialism('');
+      setSortBy('');
+      if (typeof window !== 'undefined') {
+        const url = new URL(window.location.href);
+        url.search = '';
+        window.history.replaceState({}, '', url.pathname);
+      }
     });
   };
 
@@ -204,8 +238,42 @@ export default function PractitionersDirectoryPage() {
               </select>
             </div>
 
+            {/* Sort order control (Module 09 Stretch requirement) */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
+              <label
+                htmlFor="filter-sort"
+                style={{
+                  fontSize: 'var(--text-sm)',
+                  fontWeight: 500,
+                  color: 'var(--ink)',
+                }}
+              >
+                Sort:
+              </label>
+              <select
+                id="filter-sort"
+                value={sortBy}
+                onChange={handleSortChange}
+                style={{
+                  padding: 'var(--space-2) var(--space-3)',
+                  backgroundColor: 'var(--surface-2)',
+                  border: '1px solid var(--line)',
+                  borderRadius: 'var(--radius-sm)',
+                  color: 'var(--ink)',
+                  fontFamily: 'var(--body)',
+                  fontSize: 'var(--text-sm)',
+                  minWidth: '160px',
+                }}
+              >
+                <option value="">Default Order</option>
+                <option value="experience-desc">Experience (High → Low)</option>
+                <option value="experience-asc">Experience (Low → High)</option>
+                <option value="name-asc">Name (A → Z)</option>
+              </select>
+            </div>
+
             {/* Reset button if filter is active */}
-            {(selectedLanguage || selectedSpecialism) && (
+            {(selectedLanguage || selectedSpecialism || sortBy) && (
               <button
                 type="button"
                 onClick={handleResetFilters}
@@ -401,7 +469,7 @@ export default function PractitionersDirectoryPage() {
         )}
 
         {/* State 4: Success State (Grid of cards) */}
-        {!loading && !error && filteredPractitioners.length > 0 && (
+        {!loading && !error && displayedPractitioners.length > 0 && (
           <ul
             aria-label="Practitioner list"
             style={{
@@ -413,7 +481,7 @@ export default function PractitionersDirectoryPage() {
               gap: 'var(--space-4)',
             }}
           >
-            {filteredPractitioners.map((prac) => (
+            {displayedPractitioners.map((prac) => (
               <li key={prac.id}>
                 <article
                   style={{

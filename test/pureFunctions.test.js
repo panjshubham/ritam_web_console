@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { formatSunTime, calculateDayLength, filterPractitioners } from '@/lib/astronomy';
+import { formatSunTime, calculateDayLength, filterPractitioners, sortPractitioners } from '@/lib/astronomy';
 
 describe('Test 8: Pure astronomical calculation and filtering functions', () => {
   describe('formatSunTime', () => {
@@ -57,6 +57,33 @@ describe('Test 8: Pure astronomical calculation and filtering functions', () => 
     it('edge case: returns empty array when list is null or empty', () => {
       expect(filterPractitioners(null, { language: 'Hindi' })).toEqual([]);
       expect(filterPractitioners([], { language: 'Hindi' })).toEqual([]);
+    });
+  });
+
+  describe('sortPractitioners (Module 09 Stretch)', () => {
+    const sample = [
+      { id: '1', pseudonym: 'Somnath', experienceYears: 10 },
+      { id: '2', pseudonym: 'Ananya', experienceYears: 20 },
+      { id: '3', pseudonym: 'Bhaskar', experienceYears: 5 },
+    ];
+
+    it('sorts descending by experience', () => {
+      const sorted = sortPractitioners(sample, 'experience-desc');
+      expect(sorted.map((s) => s.id)).toEqual(['2', '1', '3']);
+    });
+
+    it('sorts ascending by experience', () => {
+      const sorted = sortPractitioners(sample, 'experience-asc');
+      expect(sorted.map((s) => s.id)).toEqual(['3', '1', '2']);
+    });
+
+    it('sorts ascending by pseudonym', () => {
+      const sorted = sortPractitioners(sample, 'name-asc');
+      expect(sorted.map((s) => s.pseudonym)).toEqual(['Ananya', 'Bhaskar', 'Somnath']);
+    });
+
+    it('returns empty array when list is invalid', () => {
+      expect(sortPractitioners(null, 'experience-desc')).toEqual([]);
     });
   });
 });

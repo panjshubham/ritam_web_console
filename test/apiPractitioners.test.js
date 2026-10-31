@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { GET } from '@/app/api/practitioners/route';
+import { GET, POST } from '@/app/api/practitioners/route';
 
 describe('Test 7: Route handler at /api/practitioners', () => {
   it('returns status 200 and full practitioner list when no query params provided', async () => {
@@ -58,6 +58,54 @@ describe('Test 7: Route handler at /api/practitioners', () => {
     expect(body.success).toBe(true);
     expect(body.count).toBe(0);
     expect(body.data).toEqual([]);
+  });
+
+  describe('Stretch: POST /api/practitioners onboarding endpoint', () => {
+    it('creates a practitioner when valid payload provided', async () => {
+      const validPayload = {
+        pseudonym: 'Vidwan Shastri',
+        languages: ['Hindi', 'Sanskrit'],
+        specialisms: ['Muhurta', 'Kundali'],
+        experienceYears: 16,
+        priceBand: '₹₹',
+        bio: 'Decades of classical Jyotish consultation for career transitions.',
+      };
+
+      const request = new Request('http://localhost:3000/api/practitioners', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(validPayload),
+      });
+
+      const response = await POST(request);
+      expect(response.status).toBe(201);
+
+      const body = await response.json();
+      expect(body.success).toBe(true);
+      expect(body.data).toHaveProperty('id');
+      expect(body.data.pseudonym).toBe('Vidwan Shastri');
+      expect(body.data.experienceYears).toBe(16);
+    });
+
+    it('returns status 400 when required fields are missing or invalid', async () => {
+      const invalidPayload = {
+        pseudonym: '', // empty
+        languages: [],
+      };
+
+      const request = new Request('http://localhost:3000/api/practitioners', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(invalidPayload),
+      });
+
+      const response = await POST(request);
+      expect(response.status).toBe(400);
+
+      const body = await response.json();
+      expect(body.success).toBe(false);
+      expect(body.error).toMatch(/pseudonym is required/i);
+    });
   });
 });
 

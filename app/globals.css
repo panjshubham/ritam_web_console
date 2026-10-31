@@ -88,6 +88,25 @@
   color-scheme: dark;
 }
 
+:root[data-theme="light"] {
+  --bg: #FBFAF7;
+  --surface: #FFFFFF;
+  --surface-2: #F4F1EA;
+  --codebg: #F4F1E8;
+  --ink: #16243D;
+  --ink-soft: #55607A;
+  --ink-faint: #8C94A3;
+  --line: #DFD9CD;
+  --line-soft: #EDE8DE;
+  --accent: #C2412A;
+  --accent-hover: #A8321F;
+  --brass: #8E7236;
+  --violet: #7A4E8C;
+  --ok: #2E6B4F;
+  --crit: #A8321F;
+  color-scheme: light;
+}
+
 /* Base Styles */
 *, *::before, *::after {
   box-sizing: border-box;

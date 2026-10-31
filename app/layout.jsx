@@ -1,6 +1,7 @@
 // Server Component: Provides the static HTML shell, SEO metadata, and primary navigation without adding client bundle weight.
 import './globals.css';
 import Link from 'next/link';
+import { ThemeToggle } from './components/ThemeToggle';
 
 export const metadata = {
   title: 'Ritam Web Console',
@@ -107,6 +108,7 @@ export default function RootLayout({ children }) {
               >
                 Practitioners
               </Link>
+              <ThemeToggle />
             </nav>
           </div>
         </header>

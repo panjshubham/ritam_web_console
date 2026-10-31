@@ -42,7 +42,7 @@ npm run test:watch
 
 **Offline Capability:** The suite has zero external network calls. All external API requests (`api.sunrise-sunset.org`) and route handlers are mocked or tested in-memory. You can turn off your internet connection completely, and all tests will still pass.
 
-**Suite Overview (18 total tests across 4 test suites):**
+**Suite Overview (24 total tests across 4 test suites):**
 - `test/practitioners.test.jsx`:
   - **Test 1**: Practitioner list renders the rows it is given (cards, headings, pseudonyms).
   - **Test 2**: Choosing a language filter narrows the list via derived render-time calculation.
@@ -54,15 +54,17 @@ npm run test:watch
   - **Test 6b**: Handles network failures gracefully.
 - `test/apiPractitioners.test.js`:
   - **Test 7**: Route handler `/api/practitioners` returns proper JSON schema with count, filters, status 200, and filters by `?language=` and `?specialism=`.
+  - **Test 7b (Stretch)**: `POST /api/practitioners` validates submissions (pseudonym, languages, specialisms, priceBand, experience) and responds with status 201 or 400.
 - `test/pureFunctions.test.js`:
-  - **Test 8**: Pure functions (`formatSunTime`, `calculateDayLength`, `filterPractitioners`) tested across normal, edge (null/undefined/blank/reversed times), and boundary inputs.
+  - **Test 8**: Pure functions (`formatSunTime`, `calculateDayLength`, `filterPractitioners`, and stretch `sortPractitioners`) tested across normal, edge (null/undefined/blank/reversed times), and boundary inputs.
 
 ## What works
 
-1. **Three Core Routes & Navigation:**
+1. **Three Core Routes & Next.js App Router Conventions:**
    - `/`: Interactive solar timing console for 4 Indian observation nodes (Bengaluru, Kolkata, Delhi, Chennai).
-   - `/practitioners`: Directory with live search/filter by language and specialism, live count, and clear filters action.
+   - `/practitioners`: Directory with live search/filter by language and specialism, live count, URL-synchronized sorting, and clear filters action.
    - `/practitioners/[id]`: Detail view displaying pseudonym, price band, verified experience, languages, specialisms, and ethics covenant.
+   - App Router standard files: [`app/loading.jsx`](file:///c:/Users/SHUBHAM%20PANJIYARA/Desktop/ritam_shubh/app/loading.jsx), [`app/error.jsx`](file:///c:/Users/SHUBHAM%20PANJIYARA/Desktop/ritam_shubh/app/error.jsx), and [`app/not-found.jsx`](file:///c:/Users/SHUBHAM%20PANJIYARA/Desktop/ritam_shubh/app/not-found.jsx).
    - Global `<header>` and breadcrumbs navigating between all routes with Next.js `<Link>`.
 
 2. **All 4 Data States Everywhere (Including Layout-Holding Skeletons):**
@@ -80,7 +82,8 @@ npm run test:watch
 4. **Pure CSS & Design Tokens (Issue FRE-109):**
    - Strictly CSS custom properties (`var(--token)`) for all colors, spacings, borders, and typography.
    - Zero raw hex codes in component rules.
-   - Dark mode support via `prefers-color-scheme: dark` and `:root[data-theme="dark"]`.
+   - Dark mode support via `prefers-color-scheme: dark`, `:root[data-theme="dark"]`, and `:root[data-theme="light"]`.
+   - **Interactive Theme Toggle:** Client component in header switching between OS auto, dark, and light, persisting choice in `localStorage`.
    - Responsive down to 360px without horizontal scroll.
 
 5. **Accessibility & Tone:**
@@ -88,6 +91,13 @@ npm run test:watch
    - Visible `:focus-visible` outlines.
    - Screen-reader announcements via `role="status"`, `role="alert"`, and `aria-live="polite"`.
    - Adherence to Ritam tone principles: no fear-based copy, exclamation marks, countdowns, or urgency badges.
+
+6. **Stretch Items Completed:**
+   - Remember chosen city in `localStorage` with `try/catch`.
+   - Cancel in-flight requests with `AbortController`.
+   - Loading skeleton holding card height.
+   - Sort practitioner list with URL query synchronization.
+   - `POST` to `/api/practitioners` with validated onboarding payload.
 
 ## Decisions I made
 
@@ -112,14 +122,14 @@ npm run test:watch
 
 ## What I would do next
 
-1. **URL-Synchronized Filter State:**
-   - Store the selected `language` and `specialism` filters in the URL query parameters (`/practitioners?language=Kannada`) via `useSearchParams` and `useRouter`, enabling users to bookmark and share filtered views.
+1. **Pagination / Infinite Virtualized Scroll:**
+   - As the practitioner registry scales from 12 mock records to thousands, implement virtualized row windowing to maintain 60fps rendering performance.
 
-2. **Client-Side Local Storage Persistence:**
-   - Persist the selected observation city ID in `localStorage` with `try/catch` fallbacks so the user's preferred city is remembered on subsequent visits.
+2. **Full URL Query Synchronization for All Filter Criteria:**
+   - Extend the URL synchronization currently handling `?sort=` to also encode `?language=` and `?specialism=`, allowing fully shareable filtered search links.
 
-3. **Skeleton Shimmer Loading Cards:**
-   - Enhance the loading states with CSS-only skeleton cards matching the exact dimensions of loaded cards to completely eliminate visual layout shifts.
+3. **Client-Side Visual Ephemeris Trajectory Diagram:**
+   - Add a pure CSS / SVG sun arc diagram visually depicting the Sun's current altitude between sunrise, noon, and sunset for the selected Indian city.
 
 ## What I found hard
 
