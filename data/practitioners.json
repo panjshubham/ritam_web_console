@@ -1,0 +1,123 @@
+[
+  {
+    "id": "prac-101",
+    "name": "Jyotishi Ananya",
+    "pseudonym": "Ananya Vani",
+    "languages": ["Hindi", "English"],
+    "specialisms": ["Muhurta", "Kundali"],
+    "experienceYears": 14,
+    "priceBand": "₹₹",
+    "bio": "Specialising in auspicious timing calculations (Muhurta) and natal chart readings for life transitions."
+  },
+  {
+    "id": "prac-102",
+    "name": "Acharya Raghavan",
+    "pseudonym": "Raghavan Shastry",
+    "languages": ["Kannada", "English", "Telugu"],
+    "specialisms": ["Kundali", "Career"],
+    "experienceYears": 22,
+    "priceBand": "₹₹₹",
+    "bio": "Deep focus on career crossroads, professional timing, and Parashari planetary period analysis."
+  },
+  {
+    "id": "prac-103",
+    "name": "Vidwan Somnath",
+    "pseudonym": "Somnath Da",
+    "languages": ["Bengali", "Hindi", "English"],
+    "specialisms": ["Vastu", "Prashna"],
+    "experienceYears": 18,
+    "priceBand": "₹₹",
+    "bio": "Horary astrology (Prashna) and residential space orientation (Vastu Shastra) guidance."
+  },
+  {
+    "id": "prac-104",
+    "name": "Smt. Kalyani",
+    "pseudonym": "Kalyani Amma",
+    "languages": ["Tamil", "English"],
+    "specialisms": ["Relationship", "Kundali"],
+    "experienceYears": 19,
+    "priceBand": "₹₹",
+    "bio": "Synastry, compatibility considerations, and compassionate guidance for family and marriage."
+  },
+  {
+    "id": "prac-105",
+    "name": "Pandit Bhaskar",
+    "pseudonym": "Bhaskar Joshi",
+    "languages": ["Marathi", "Hindi"],
+    "specialisms": ["Muhurta", "Vastu"],
+    "experienceYears": 11,
+    "priceBand": "₹",
+    "bio": "Traditional Panchanga calculations, foundation Muhurtas, and residential energy alignment."
+  },
+  {
+    "id": "prac-106",
+    "name": "Devi Meenakshi",
+    "pseudonym": "Meenakshi Devi",
+    "languages": ["Tamil", "Kannada"],
+    "specialisms": ["Prashna", "Career"],
+    "experienceYears": 15,
+    "priceBand": "₹₹",
+    "bio": "Rapid query resolution through classical Prashna and vocational trajectory evaluation."
+  },
+  {
+    "id": "prac-107",
+    "name": "Acharya Arvind",
+    "pseudonym": "Arvind Ji",
+    "languages": ["Hindi", "English"],
+    "specialisms": ["Career", "Kundali"],
+    "experienceYears": 8,
+    "priceBand": "₹",
+    "bio": "Dasha and transit consultations focused on academic pursuits, competitive exams, and job shifts."
+  },
+  {
+    "id": "prac-108",
+    "name": "Shri Venkatesh",
+    "pseudonym": "Venkatesh Rao",
+    "languages": ["Kannada", "Telugu"],
+    "specialisms": ["Muhurta", "Relationship"],
+    "experienceYears": 26,
+    "priceBand": "₹₹₹",
+    "bio": "Master of marriage muhurtas, Vivaha matching, and family dispute pacification rituals."
+  },
+  {
+    "id": "prac-109",
+    "name": "Dr. Pritha Mukherjee",
+    "pseudonym": "Pritha Vidushi",
+    "languages": ["Bengali", "English"],
+    "specialisms": ["Medical Jyotish", "Kundali"],
+    "experienceYears": 17,
+    "priceBand": "₹₹₹",
+    "bio": "Ayur-astrology analysis examining physical vitality, constitution, and health vulnerability periods."
+  },
+  {
+    "id": "prac-110",
+    "name": "Pandit Harish",
+    "pseudonym": "Harish Sharma",
+    "languages": ["Hindi"],
+    "specialisms": ["Muhurta", "Prashna"],
+    "experienceYears": 12,
+    "priceBand": "₹",
+    "bio": "Daily Choghadiya, Griha Pravesh timings, and immediate circumstance resolution."
+  },
+  {
+    "id": "prac-111",
+    "name": "Jyotishi Srinivas",
+    "pseudonym": "Srinivas Shastri",
+    "languages": ["Telugu", "English"],
+    "specialisms": ["Career", "Vastu"],
+    "experienceYears": 16,
+    "priceBand": "₹₹",
+    "bio": "Workplace space harmonization and business viability analysis based on planetary cycles."
+  },
+  {
+    "id": "prac-112",
+    "name": "Guru Rajeshwar",
+    "pseudonym": "Rajeshwar Nath",
+    "languages": ["Marathi", "Hindi", "English"],
+    "specialisms": ["Kundali", "Relationship"],
+    "experienceYears": 20,
+    "priceBand": "₹₹",
+    "bio": "Detailed divisional chart evaluations (Navamsha) and long-term partnership counseling."
+  }
+]
+
