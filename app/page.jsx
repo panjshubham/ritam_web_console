@@ -1,0 +1,437 @@
+// Client Component: Manages interactive city selection, user event handling, and client-side lifecycle data fetching via custom hook.
+'use client';
+
+import { useState } from 'react';
+import { CITIES, DEFAULT_CITY } from '@/lib/cities';
+import { useSunTimes } from '@/hooks/useSunTimes';
+import { formatSunTime, calculateDayLength } from '@/lib/astronomy';
+
+export default function HomePage() {
+  const [selectedCityId, setSelectedCityId] = useState(DEFAULT_CITY.id);
+
+  const selectedCity = CITIES.find((c) => c.id === selectedCityId) || DEFAULT_CITY;
+
+  const { data, error, loading, refetch } = useSunTimes({
+    lat: selectedCity.lat,
+    lng: selectedCity.lng,
+  });
+
+  return (
+    <div className="page-container">
+      <section
+        aria-labelledby="page-heading"
+        style={{
+          marginBottom: 'var(--space-6)',
+        }}
+      >
+        <p
+          style={{
+            fontFamily: 'var(--mono)',
+            fontSize: 'var(--text-xs)',
+            letterSpacing: '0.12em',
+            textTransform: 'uppercase',
+            color: 'var(--accent)',
+            margin: '0 0 var(--space-2)',
+          }}
+        >
+          Astronomical Observations
+        </p>
+        <h1
+          id="page-heading"
+          style={{
+            fontFamily: 'var(--display)',
+            fontSize: 'var(--text-3xl)',
+            fontWeight: 600,
+            margin: '0 0 var(--space-2)',
+            color: 'var(--ink)',
+            lineHeight: 1.15,
+          }}
+        >
+          Solar Coordinates & Day Division
+        </h1>
+        <p
+          style={{
+            color: 'var(--ink-soft)',
+            fontSize: 'var(--text-base)',
+            margin: 0,
+            maxWidth: '65ch',
+          }}
+        >
+          Daily solar rising, setting, and day length intervals across key observation nodes in India.
+        </p>
+      </section>
+
+      {/* City Picker Form */}
+      <section
+        aria-label="Observation node selection"
+        style={{
+          backgroundColor: 'var(--surface)',
+          border: '1px solid var(--line)',
+          borderRadius: 'var(--radius-md)',
+          padding: 'var(--space-4)',
+          marginBottom: 'var(--space-6)',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            gap: 'var(--space-4)',
+          }}
+        >
+          <label
+            htmlFor="city-select"
+            style={{
+              fontSize: 'var(--text-sm)',
+              fontWeight: 500,
+              color: 'var(--ink)',
+            }}
+          >
+            Observation Node:
+          </label>
+          <select
+            id="city-select"
+            value={selectedCityId}
+            onChange={(e) => setSelectedCityId(e.target.value)}
+            style={{
+              padding: 'var(--space-2) var(--space-3)',
+              backgroundColor: 'var(--surface-2)',
+              border: '1px solid var(--line)',
+              borderRadius: 'var(--radius-sm)',
+              color: 'var(--ink)',
+              fontFamily: 'var(--body)',
+              fontSize: 'var(--text-sm)',
+              minWidth: '220px',
+            }}
+          >
+            {CITIES.map((city) => (
+              <option key={city.id} value={city.id}>
+                {city.name} ({city.state})
+              </option>
+            ))}
+          </select>
+
+          <span
+            style={{
+              fontFamily: 'var(--mono)',
+              fontSize: 'var(--text-xs)',
+              color: 'var(--ink-faint)',
+            }}
+          >
+            Coordinates: {selectedCity.lat.toFixed(4)}°N, {selectedCity.lng.toFixed(4)}°E
+          </span>
+        </div>
+      </section>
+
+      {/* 4 Data States Representation */}
+      <section aria-live="polite" style={{ minHeight: '260px' }}>
+        {/* State 1: Loading */}
+        {loading && (
+          <div
+            role="status"
+            aria-label="Calculating solar timings"
+            style={{
+              backgroundColor: 'var(--surface)',
+              border: '1px solid var(--line)',
+              borderRadius: 'var(--radius-md)',
+              padding: 'var(--space-8) var(--space-6)',
+              textAlign: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 'var(--space-3)',
+            }}
+          >
+            <div
+              style={{
+                fontFamily: 'var(--mono)',
+                fontSize: 'var(--text-sm)',
+                color: 'var(--brass)',
+              }}
+            >
+              Computing ephemeris coordinates for {selectedCity.name}…
+            </div>
+            <p style={{ margin: 0, fontSize: 'var(--text-sm)', color: 'var(--ink-soft)' }}>
+              Resolving horizon crossing moments.
+            </p>
+          </div>
+        )}
+
+        {/* State 2: Error (with calm retry action) */}
+        {!loading && error && (
+          <div
+            role="alert"
+            style={{
+              backgroundColor: 'var(--surface)',
+              border: '1px solid var(--crit)',
+              borderLeft: '4px solid var(--crit)',
+              borderRadius: 'var(--radius-md)',
+              padding: 'var(--space-5)',
+            }}
+          >
+            <h2
+              style={{
+                margin: '0 0 var(--space-2)',
+                fontSize: 'var(--text-base)',
+                fontWeight: 600,
+                color: 'var(--crit)',
+              }}
+            >
+              Astronomical Calculation Notice
+            </h2>
+            <p
+              style={{
+                margin: '0 0 var(--space-4)',
+                fontSize: 'var(--text-sm)',
+                color: 'var(--ink-soft)',
+              }}
+            >
+              {error}
+            </p>
+            <button
+              type="button"
+              onClick={refetch}
+              style={{
+                backgroundColor: 'var(--surface-2)',
+                border: '1px solid var(--line)',
+                color: 'var(--ink)',
+                padding: 'var(--space-2) var(--space-4)',
+                fontSize: 'var(--text-sm)',
+                borderRadius: 'var(--radius-sm)',
+              }}
+            >
+              Retry Calculation
+            </button>
+          </div>
+        )}
+
+        {/* State 3: Empty Success */}
+        {!loading && !error && !data && (
+          <div
+            style={{
+              backgroundColor: 'var(--surface)',
+              border: '1px solid var(--line)',
+              borderRadius: 'var(--radius-md)',
+              padding: 'var(--space-6)',
+              textAlign: 'center',
+            }}
+          >
+            <h2
+              style={{
+                margin: '0 0 var(--space-2)',
+                fontSize: 'var(--text-base)',
+                fontWeight: 600,
+                color: 'var(--ink)',
+              }}
+            >
+              No Solar Ephemeris Available
+            </h2>
+            <p
+              style={{
+                margin: 0,
+                fontSize: 'var(--text-sm)',
+                color: 'var(--ink-soft)',
+              }}
+            >
+              No solar timing points returned for this coordinate on the chosen date.
+            </p>
+          </div>
+        )}
+
+        {/* State 4: Success */}
+        {!loading && !error && data && (
+          <div
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gap: 'var(--space-4)',
+            }}
+          >
+            {/* Sunrise Card */}
+            <article
+              style={{
+                backgroundColor: 'var(--surface)',
+                border: '1px solid var(--line)',
+                borderTop: '3px solid var(--accent)',
+                borderRadius: 'var(--radius-md)',
+                padding: 'var(--space-5)',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--mono)',
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--accent)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  display: 'block',
+                  marginBottom: 'var(--space-2)',
+                }}
+              >
+                Sunrise (Surya Udaya)
+              </span>
+              <div
+                style={{
+                  fontFamily: 'var(--display)',
+                  fontSize: 'var(--text-2xl)',
+                  fontWeight: 600,
+                  color: 'var(--ink)',
+                  marginBottom: 'var(--space-1)',
+                }}
+              >
+                {formatSunTime(data.sunrise)}
+              </div>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--ink-soft)',
+                }}
+              >
+                Calculated at true astronomical horizon
+              </p>
+            </article>
+
+            {/* Sunset Card */}
+            <article
+              style={{
+                backgroundColor: 'var(--surface)',
+                border: '1px solid var(--line)',
+                borderTop: '3px solid var(--brass)',
+                borderRadius: 'var(--radius-md)',
+                padding: 'var(--space-5)',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--mono)',
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--brass)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  display: 'block',
+                  marginBottom: 'var(--space-2)',
+                }}
+              >
+                Sunset (Surya Asta)
+              </span>
+              <div
+                style={{
+                  fontFamily: 'var(--display)',
+                  fontSize: 'var(--text-2xl)',
+                  fontWeight: 600,
+                  color: 'var(--ink)',
+                  marginBottom: 'var(--space-1)',
+                }}
+              >
+                {formatSunTime(data.sunset)}
+              </div>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--ink-soft)',
+                }}
+              >
+                Upper limb disappearance beneath horizon
+              </p>
+            </article>
+
+            {/* Day Length Card */}
+            <article
+              style={{
+                backgroundColor: 'var(--surface)',
+                border: '1px solid var(--line)',
+                borderTop: '3px solid var(--ok)',
+                borderRadius: 'var(--radius-md)',
+                padding: 'var(--space-5)',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--mono)',
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--ok)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  display: 'block',
+                  marginBottom: 'var(--space-2)',
+                }}
+              >
+                Total Day Length (Dina Mana)
+              </span>
+              <div
+                style={{
+                  fontFamily: 'var(--display)',
+                  fontSize: 'var(--text-2xl)',
+                  fontWeight: 600,
+                  color: 'var(--ink)',
+                  marginBottom: 'var(--space-1)',
+                }}
+              >
+                {calculateDayLength(data.sunrise, data.sunset)}
+              </div>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--ink-soft)',
+                }}
+              >
+                Duration of diurnal light period
+              </p>
+            </article>
+
+            {/* Solar Noon Card */}
+            <article
+              style={{
+                backgroundColor: 'var(--surface)',
+                border: '1px solid var(--line)',
+                borderTop: '3px solid var(--violet)',
+                borderRadius: 'var(--radius-md)',
+                padding: 'var(--space-5)',
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--mono)',
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--violet)',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.08em',
+                  display: 'block',
+                  marginBottom: 'var(--space-2)',
+                }}
+              >
+                Solar Noon (Madhya Ahna)
+              </span>
+              <div
+                style={{
+                  fontFamily: 'var(--display)',
+                  fontSize: 'var(--text-2xl)',
+                  fontWeight: 600,
+                  color: 'var(--ink)',
+                  marginBottom: 'var(--space-1)',
+                }}
+              >
+                {formatSunTime(data.solar_noon)}
+              </div>
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: 'var(--text-xs)',
+                  color: 'var(--ink-soft)',
+                }}
+              >
+                Zenith transit along local meridian
+              </p>
+            </article>
+          </div>
+        )}
+      </section>
+    </div>
+  );
+}
+
