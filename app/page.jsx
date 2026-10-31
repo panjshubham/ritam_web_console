@@ -137,8 +137,8 @@ export default function HomePage() {
           <span
             style={{
               fontFamily: 'var(--mono)',
-              fontSize: 'var(--text-xs)',
-              color: 'var(--ink-faint)',
+              fontSize: 'var(--text-sm)',
+              color: 'var(--ink-soft)',
             }}
           >
             Coordinates: {selectedCity.lat.toFixed(4)}°N, {selectedCity.lng.toFixed(4)}°E
