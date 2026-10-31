@@ -49,7 +49,7 @@ export default function HomePage() {
         <p
           style={{
             fontFamily: 'var(--mono)',
-            fontSize: 'var(--text-xs)',
+            fontSize: 'var(--text-sm)',
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
             color: 'var(--accent)',

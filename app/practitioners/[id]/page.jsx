@@ -131,7 +131,7 @@ export default async function PractitionerDetailPage({ params }) {
               <span
                 style={{
                   fontFamily: 'var(--mono)',
-                  fontSize: 'var(--text-xs)',
+                  fontSize: 'var(--text-sm)',
                   color: 'var(--accent)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.1em',
