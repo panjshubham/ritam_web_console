@@ -334,39 +334,35 @@ export default function PractitionersDirectoryPage() {
               >
                 <div>
                   <div
+                    className="skeleton-shimmer"
                     style={{
                       height: '22px',
                       width: '55%',
-                      backgroundColor: 'var(--surface-2)',
-                      borderRadius: 'var(--radius-sm)',
                       marginBottom: 'var(--space-3)',
                     }}
                   />
                   <div
+                    className="skeleton-shimmer"
                     style={{
                       height: '14px',
                       width: '90%',
-                      backgroundColor: 'var(--surface-2)',
-                      borderRadius: 'var(--radius-sm)',
                       marginBottom: 'var(--space-2)',
                     }}
                   />
                   <div
+                    className="skeleton-shimmer"
                     style={{
                       height: '14px',
                       width: '70%',
-                      backgroundColor: 'var(--surface-2)',
-                      borderRadius: 'var(--radius-sm)',
                       marginBottom: 'var(--space-4)',
                     }}
                   />
                 </div>
                 <div
+                  className="skeleton-shimmer"
                   style={{
                     height: '28px',
                     width: '105px',
-                    backgroundColor: 'var(--surface-2)',
-                    borderRadius: 'var(--radius-sm)',
                   }}
                 />
               </div>
@@ -484,6 +480,7 @@ export default function PractitionersDirectoryPage() {
             {displayedPractitioners.map((prac) => (
               <li key={prac.id}>
                 <article
+                  className="interactive-card"
                   style={{
                     backgroundColor: 'var(--surface)',
                     border: '1px solid var(--line)',
@@ -493,7 +490,6 @@ export default function PractitionersDirectoryPage() {
                     flexDirection: 'column',
                     justifyContent: 'space-between',
                     height: '100%',
-                    transition: 'border-color 0.15s ease',
                   }}
                 >
                   <div>
@@ -522,6 +518,10 @@ export default function PractitionersDirectoryPage() {
                           fontSize: 'var(--text-xs)',
                           color: 'var(--brass)',
                           fontWeight: 500,
+                          backgroundColor: 'var(--surface-2)',
+                          border: '1px solid var(--line)',
+                          padding: '1px var(--space-2)',
+                          borderRadius: 'var(--radius-sm)',
                         }}
                       >
                         {prac.priceBand}
@@ -549,18 +549,7 @@ export default function PractitionersDirectoryPage() {
                       }}
                     >
                       {prac.specialisms?.map((spec) => (
-                        <span
-                          key={spec}
-                          style={{
-                            fontFamily: 'var(--mono)',
-                            fontSize: 'var(--text-xs)',
-                            backgroundColor: 'var(--surface-2)',
-                            color: 'var(--ink)',
-                            border: '1px solid var(--line-soft)',
-                            borderRadius: 'var(--radius-sm)',
-                            padding: '2px var(--space-2)',
-                          }}
-                        >
+                        <span key={spec} className="badge-tag">
                           {spec}
                         </span>
                       ))}
@@ -582,7 +571,9 @@ export default function PractitionersDirectoryPage() {
                     <Link
                       href={`/practitioners/${prac.id}`}
                       style={{
-                        display: 'inline-block',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 'var(--space-1)',
                         backgroundColor: 'var(--surface-2)',
                         border: '1px solid var(--line)',
                         color: 'var(--ink)',
@@ -591,6 +582,7 @@ export default function PractitionersDirectoryPage() {
                         fontWeight: 500,
                         borderRadius: 'var(--radius-sm)',
                         textDecoration: 'none',
+                        transition: 'border-color 0.15s ease, background-color 0.15s ease',
                       }}
                     >
                       View Profile →

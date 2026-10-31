@@ -154,30 +154,61 @@ export default function HomePage() {
             role="status"
             aria-label="Calculating solar timings"
             style={{
-              backgroundColor: 'var(--surface)',
-              border: '1px solid var(--line)',
-              borderRadius: 'var(--radius-md)',
-              padding: 'var(--space-8) var(--space-6)',
-              textAlign: 'center',
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 'var(--space-3)',
+              gap: 'var(--space-4)',
             }}
           >
             <div
               style={{
-                fontFamily: 'var(--mono)',
-                fontSize: 'var(--text-sm)',
-                color: 'var(--brass)',
+                backgroundColor: 'var(--surface)',
+                border: '1px solid var(--line)',
+                borderRadius: 'var(--radius-md)',
+                padding: 'var(--space-6)',
+                textAlign: 'center',
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 'var(--space-2)',
               }}
             >
-              Computing ephemeris coordinates for {selectedCity.name}…
+              <div
+                style={{
+                  fontFamily: 'var(--mono)',
+                  fontSize: 'var(--text-sm)',
+                  color: 'var(--brass)',
+                }}
+              >
+                Computing ephemeris coordinates for {selectedCity.name}…
+              </div>
+              <p style={{ margin: 0, fontSize: 'var(--text-sm)', color: 'var(--ink-soft)' }}>
+                Resolving horizon crossing moments.
+              </p>
             </div>
-            <p style={{ margin: 0, fontSize: 'var(--text-sm)', color: 'var(--ink-soft)' }}>
-              Resolving horizon crossing moments.
-            </p>
+
+            {/* Skeleton placeholders */}
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+                gap: 'var(--space-4)',
+              }}
+            >
+              {[1, 2, 3, 4].map((n) => (
+                <div
+                  key={n}
+                  className="skeleton-shimmer"
+                  style={{
+                    backgroundColor: 'var(--surface)',
+                    border: '1px solid var(--line)',
+                    borderRadius: 'var(--radius-md)',
+                    padding: 'var(--space-5)',
+                    height: '140px',
+                  }}
+                />
+              ))}
+            </div>
           </div>
         )}
 
@@ -273,6 +304,7 @@ export default function HomePage() {
           >
             {/* Sunrise Card */}
             <article
+              className="interactive-card"
               style={{
                 backgroundColor: 'var(--surface)',
                 border: '1px solid var(--line)',
@@ -318,6 +350,7 @@ export default function HomePage() {
 
             {/* Sunset Card */}
             <article
+              className="interactive-card"
               style={{
                 backgroundColor: 'var(--surface)',
                 border: '1px solid var(--line)',
@@ -363,6 +396,7 @@ export default function HomePage() {
 
             {/* Day Length Card */}
             <article
+              className="interactive-card"
               style={{
                 backgroundColor: 'var(--surface)',
                 border: '1px solid var(--line)',
@@ -408,6 +442,7 @@ export default function HomePage() {
 
             {/* Solar Noon Card */}
             <article
+              className="interactive-card"
               style={{
                 backgroundColor: 'var(--surface)',
                 border: '1px solid var(--line)',
