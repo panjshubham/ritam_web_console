@@ -65,16 +65,17 @@ npm run test:watch
    - `/practitioners/[id]`: Detail view displaying pseudonym, price band, verified experience, languages, specialisms, and ethics covenant.
    - Global `<header>` and breadcrumbs navigating between all routes with Next.js `<Link>`.
 
-2. **All 4 Data States Everywhere:**
-   - **Idle/Loading:** Height-preserving status placeholders without layout shift.
+2. **All 4 Data States Everywhere (Including Layout-Holding Skeletons):**
+   - **Idle/Loading:** Height-preserving skeleton cards matching card grid dimensions, completely eliminating layout shifts.
    - **Success:** Full presentation of data.
    - **Empty Success:** Distinct empty state explaining zero matches with a reset button.
    - **Error:** Calm, non-alarmist explanation with a working retry action button.
 
-3. **Custom Hook `useSunTimes`:**
+3. **Custom Hook `useSunTimes` & City Persistence:**
    - Wraps the sunrise-sunset API.
    - Uses `AbortController` to cancel stale in-flight requests when the user changes observation nodes quickly.
    - Correctly traps `INVALID_REQUEST` responses returned with HTTP 200.
+   - Persists selected observation city in `localStorage` wrapped in `try/catch` safety blocks.
 
 4. **Pure CSS & Design Tokens (Issue FRE-109):**
    - Strictly CSS custom properties (`var(--token)`) for all colors, spacings, borders, and typography.

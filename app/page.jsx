@@ -7,7 +7,29 @@ import { useSunTimes } from '@/hooks/useSunTimes';
 import { formatSunTime, calculateDayLength } from '@/lib/astronomy';
 
 export default function HomePage() {
-  const [selectedCityId, setSelectedCityId] = useState(DEFAULT_CITY.id);
+  const [selectedCityId, setSelectedCityId] = useState(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const saved = localStorage.getItem('ritam_chosen_city');
+        if (saved && CITIES.some((c) => c.id === saved)) {
+          return saved;
+        }
+      } catch (err) {
+        // Fallback gracefully on storage access errors
+      }
+    }
+    return DEFAULT_CITY.id;
+  });
+
+  const handleCityChange = (e) => {
+    const nextCityId = e.target.value;
+    setSelectedCityId(nextCityId);
+    try {
+      localStorage.setItem('ritam_chosen_city', nextCityId);
+    } catch (err) {
+      // Ignore write errors (e.g. private mode restrictions)
+    }
+  };
 
   const selectedCity = CITIES.find((c) => c.id === selectedCityId) || DEFAULT_CITY;
 
@@ -93,7 +115,7 @@ export default function HomePage() {
           <select
             id="city-select"
             value={selectedCityId}
-            onChange={(e) => setSelectedCityId(e.target.value)}
+            onChange={handleCityChange}
             style={{
               padding: 'var(--space-2) var(--space-3)',
               backgroundColor: 'var(--surface-2)',

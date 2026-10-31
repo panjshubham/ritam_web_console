@@ -239,29 +239,70 @@ export default function PractitionersDirectoryPage() {
 
       {/* 4 Data States */}
       <section aria-live="polite">
-        {/* State 1: Loading */}
+        {/* State 1: Loading (Layout-holding Skeleton) */}
         {loading && (
           <div
             role="status"
-            aria-label="Loading practitioner list"
+            aria-label="Loading practitioner directory"
             style={{
-              backgroundColor: 'var(--surface)',
-              border: '1px solid var(--line)',
-              borderRadius: 'var(--radius-md)',
-              padding: 'var(--space-8)',
-              textAlign: 'center',
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
+              gap: 'var(--space-4)',
             }}
           >
-            <p
-              style={{
-                fontFamily: 'var(--mono)',
-                fontSize: 'var(--text-sm)',
-                color: 'var(--brass)',
-                margin: 0,
-              }}
-            >
-              Loading practitioner directory…
-            </p>
+            {[1, 2, 3].map((n) => (
+              <div
+                key={n}
+                style={{
+                  backgroundColor: 'var(--surface)',
+                  border: '1px solid var(--line)',
+                  borderRadius: 'var(--radius-md)',
+                  padding: 'var(--space-5)',
+                  minHeight: '220px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                }}
+              >
+                <div>
+                  <div
+                    style={{
+                      height: '22px',
+                      width: '55%',
+                      backgroundColor: 'var(--surface-2)',
+                      borderRadius: 'var(--radius-sm)',
+                      marginBottom: 'var(--space-3)',
+                    }}
+                  />
+                  <div
+                    style={{
+                      height: '14px',
+                      width: '90%',
+                      backgroundColor: 'var(--surface-2)',
+                      borderRadius: 'var(--radius-sm)',
+                      marginBottom: 'var(--space-2)',
+                    }}
+                  />
+                  <div
+                    style={{
+                      height: '14px',
+                      width: '70%',
+                      backgroundColor: 'var(--surface-2)',
+                      borderRadius: 'var(--radius-sm)',
+                      marginBottom: 'var(--space-4)',
+                    }}
+                  />
+                </div>
+                <div
+                  style={{
+                    height: '28px',
+                    width: '105px',
+                    backgroundColor: 'var(--surface-2)',
+                    borderRadius: 'var(--radius-sm)',
+                  }}
+                />
+              </div>
+            ))}
           </div>
         )}
 
