@@ -42,16 +42,18 @@ npm run test:watch
 
 **Offline Capability:** The suite has zero external network calls. All external API requests (`api.sunrise-sunset.org`) and route handlers are mocked or tested in-memory. You can turn off your internet connection completely, and all tests will still pass.
 
-**Suite Overview (24 total tests across 4 test suites):**
+**Suite Overview (26 total tests across 4 test suites):**
 - `test/practitioners.test.jsx`:
   - **Test 1**: Practitioner list renders the rows it is given (cards, headings, pseudonyms).
   - **Test 2**: Choosing a language filter narrows the list via derived render-time calculation.
   - **Test 3**: A filter combination that matches nothing displays the calm empty state (verifying `empty ≠ error`) with filter reset action.
+  - **Test 3b**: Displays error state with retry button when directory API fails.
 - `test/sunTimes.test.jsx`:
   - **Test 4**: Displays `role="status"` loading indicator while async calculation is in-flight.
   - **Test 5**: Displays formatted solar cards (sunrise, sunset, day length, solar noon) upon successful data resolution.
   - **Test 6**: Displays `role="alert"` calm notice and functional retry button when the API fails or returns `status: "INVALID_REQUEST"` (the Module 04 trap where HTTP 200 contains an application-level error).
   - **Test 6b**: Handles network failures gracefully.
+  - **Test 6c**: Clicking Retry fetches again and recovers to show data.
 - `test/apiPractitioners.test.js`:
   - **Test 7**: Route handler `/api/practitioners` returns proper JSON schema with count, filters, status 200, and filters by `?language=` and `?specialism=`.
   - **Test 7b (Stretch)**: `POST /api/practitioners` validates submissions (pseudonym, languages, specialisms, priceBand, experience) and responds with status 201 or 400.

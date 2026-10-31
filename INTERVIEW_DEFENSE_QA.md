@@ -119,5 +119,47 @@
 
 ---
 
-## 7. Additional Review Questions
-*(Whenever you have a new question, tell me and I will append it here immediately!)*
+## 7. Deep-Dive Code Review Q&A (Hooks & Verification)
+
+### Q14: Why was `abortControllerRef` redundant in `useSunTimes.js`?
+* **English Answer:**  
+  "In React's `useEffect`, the cleanup function returned by the effect runs automatically before every re-render (whenever dependencies change) and upon component unmount. Placing `controller.abort()` in that cleanup function already cancels any in-flight request when the user switches cities. Storing `AbortController` in a `useRef` and checking `abortControllerRef.current` at the start of the effect was completely redundant because the cleanup phase had already handled cancellation."
+* **Hinglish Answer:**  
+  "Sir, `useEffect` ka return function (cleanup function) dependency badalne par ya component unmount hone par automatically pichli request ko abort kar deta hai. Isliye `useRef` me alag se controller store karna redundant tha. Clean React code me cleanup function hi cancel karne ke liye kaafi hota hai."
+
+### Q15: Why must `setLoading(false)` inside `finally` check `!controller.signal.aborted`?
+* **English Answer:**  
+  "When a user switches cities quickly, the in-flight request is aborted. An aborted promise still runs its `finally` block. If `setLoading(false)` were called unconditionally, an aborted, older request would prematurely turn off the loading indicator while the newer city's request was still in-flight, creating state flicker and inconsistent UI. Checking `if (!controller.signal.aborted)` ensures that only the active, valid request controls the loading state."
+* **Hinglish Answer:**  
+  "Sir, jab user fast city change karta hai, toh puraani request abort ho jati hai lekin uska `finally` block tab bhi execute hota hai. Agar hum bina check kiye `setLoading(false)` kar denge, toh puraani cancelled request loading ko band kar degi jabki nayi city ka data abhi load ho hi raha hoga. Isliye `!controller.signal.aborted` check karna zaroori hai taaki sirf active request hi loading state ko band kare."
+
+### Q16: Why did you construct the date using `Asia/Kolkata` time zone instead of `new Date().toISOString()`?
+* **English Answer:**  
+  "`new Date().toISOString()` always generates the date in UTC (GMT). India operates on Indian Standard Time (`Asia/Kolkata`), which is UTC+5:30. Between midnight and 5:30 AM IST every single day, UTC is still in the previous calendar day. If a user in India opens the app at 2:00 AM on November 2, `toISOString()` would fetch sun times for November 1. Using `new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Kolkata' }).format(new Date())` guarantees that the requested date strictly reflects the calendar date in Indian Standard Time."
+* **Hinglish Answer:**  
+  "Sir, `toISOString()` date ko UTC (GMT) me nikalta hai. India UTC se 5 ghante 30 minute aage hai. Raat 12 baje se subah 5:30 baje tak, UTC me pichla din chal raha hota hai. Agar user raat 2 baje app kholega toh `toISOString()` kal ka data maang lega. `Intl.DateTimeFormat` with `Asia/Kolkata` use karne se date hamesha correct Indian calendar day ke hisaab se banti hai."
+
+### Q17: Why do your sun-times tests assert on accessible roles (`getByRole`) rather than exact text strings?
+* **English Answer:**  
+  "Testing exact text strings (like `getByText(/astronomical calculation notice/i)`) couples test suites to marketing or copywriting wording. If copy is revised for clarity or translated, fragile tests break even though the application functions perfectly. Asserting on accessible roles—such as `findByRole('alert')` for error notifications, `getByRole('status')` for loading indicators, and `getByRole('button', { name: /retry/i })` for actionable recovery—tests user-facing behavior and accessibility contracts according to WCAG and React Testing Library standards."
+* **Hinglish Answer:**  
+  "Sir, exact text test karna fragile hota hai kyunki agar copy thodi bhi change ho toh test fail ho jata hai chahe feature bilkul theek chal raha ho. `getByRole('alert')`, `getByRole('status')`, aur `getByRole('button')` use karne se test real user aur screen reader ke behavior ko verify karta hai, jo industry standard hai."
+
+### Q18: Walk me through the 4 states of `app/page.jsx` and how retry works.
+* **English Answer:**  
+  "1. **Loading State:** Rendered when `loading === true`, featuring a container with `role='status'` and calm informative text.  
+   2. **Error State:** Rendered when `!loading && error`, featuring an accessible container with `role='alert'` and a 'Retry Calculation' button that calls `refetch()` from `useSunTimes`.  
+   3. **Empty Success State:** Rendered when `!loading && !error && !data`, clearly communicating zero data without an alarming alert banner.  
+   4. **Success State:** Rendered when `!loading && !error && data`, presenting 4 clean semantic cards (`<article>`) for Sunrise, Sunset, Day Length, and Solar Noon.  
+   The Retry mechanism increments a numeric `retryTrigger` state inside `useSunTimes`, triggering the `useEffect` to dispatch a fresh network request cleanly."
+* **Hinglish Answer:**  
+  "Sir, chaaro states perfectly handled hain: Loading me `role='status'`, Error me `role='alert'` aur Retry button, Empty me calm notice bina kisi red alert ke, aur Success me chaar semantic cards (`<article>`). Retry button click karne par hook ka `refetch()` function `retryTrigger` count badha deta hai, jisse `useEffect` dobara run hota hai aur fresh request bhejta hai."
+
+### Q19: Why does reading `localStorage` inside `useState(() => ...)` cause a hydration mismatch, and how did you solve it?
+* **English Answer:**  
+  "In Next.js, Client Components are first pre-rendered on the server (SSR) to generate initial HTML, and then 'hydrated' by React in the browser. On the server, `window` does not exist (`typeof window === 'undefined'`), so SSR renders the default city (Bengaluru: 12.9716°N). On the client, if `localStorage` has a previously saved city (e.g. Delhi: 28.6139°N), reading `localStorage` synchronously during initial `useState` creation causes the client's initial HTML to differ from the server HTML, triggering a React Hydration Mismatch error. The fix is to initialize state with `DEFAULT_CITY.id` on both server and client, and synchronize the saved city from `localStorage` inside `useEffect`, which only executes after hydration is safely complete."
+* **Hinglish Answer:**  
+  "Sir, Next.js me SSR ke time server par `window` aur `localStorage` nahi hota, isliye server default city (Bengaluru) ka HTML generate karta hai. Agar hum `useState` ke initial render me direct `localStorage` read karenge toh client par Delhi aa jayega, jisse server HTML aur client HTML match nahi karega aur Hydration Mismatch error aayega. Solution ye hai ki `useState` me default value rakho, aur `localStorage` ko `useEffect` ke andar read karke state update karo, kyunki `useEffect` hydration complete hone ke baad hi chalta hai."
+
+
+

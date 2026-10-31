@@ -250,7 +250,82 @@
           <p class="answer-text">"Sir, Module 07 aur 09 me strictly mention kiya gaya tha ki authentication aur database out of scope hain. Interns ko platform ka state represent karna hota hai, regulatory ya identity logic khud nahi banana hota. Isliye maine local JSON aur route handler ke sath minimal dependencies me kaam kiya."</p>
         </div>
       </div>
+
+      <h2>7. Deep-Dive Code Review Q&amp;A (Hooks &amp; Verification)</h2>
+
+      <div class="qa-card">
+        <div class="question">Q10: Why was abortControllerRef redundant in useSunTimes.js?</div>
+        <div class="answer-block">
+          <span class="answer-label">English (Technical Explanation):</span>
+          <p class="answer-text">In React's <code>useEffect</code>, the cleanup function returned by the effect runs automatically before every re-render and upon unmount. Calling <code>controller.abort()</code> in the cleanup function already cancels any in-flight request when the user switches cities. Storing <code>AbortController</code> in a <code>useRef</code> was redundant.</p>
+        </div>
+        <div class="answer-block">
+          <span class="answer-label">Hinglish (Spoken in Interview):</span>
+          <p class="answer-text">"Sir, <code>useEffect</code> ka cleanup function dependency change hone par automatically pichli request ko abort kar deta hai. Isliye <code>useRef</code> me alag se controller store karna redundant tha."</p>
+        </div>
+      </div>
+
+      <div class="qa-card">
+        <div class="question">Q11: Why must setLoading(false) inside finally check !controller.signal.aborted?</div>
+        <div class="answer-block">
+          <span class="answer-label">English (Technical Explanation):</span>
+          <p class="answer-text">When a user switches cities quickly, in-flight requests are aborted. An aborted promise still executes its <code>finally</code> block. If <code>setLoading(false)</code> were called unconditionally, an aborted older request would prematurely turn off the loading indicator while the newer request is still running. Checking <code>!controller.signal.aborted</code> ensures only the active request manages loading state.</p>
+        </div>
+        <div class="answer-block">
+          <span class="answer-label">Hinglish (Spoken in Interview):</span>
+          <p class="answer-text">"Sir, jab user fast city change karta hai, cancelled request ka bhi <code>finally</code> run hota hai. Agar bina check kare <code>setLoading(false)</code> karenge toh loading premature band ho jayegi. Isliye <code>!controller.signal.aborted</code> zaroori hai."</p>
+        </div>
+      </div>
+
+      <div class="qa-card">
+        <div class="question">Q12: Why did you construct the date using Asia/Kolkata timezone instead of toISOString()?</div>
+        <div class="answer-block">
+          <span class="answer-label">English (Technical Explanation):</span>
+          <p class="answer-text"><code>toISOString()</code> returns date in UTC. India operates on <code>Asia/Kolkata</code> (UTC+5:30). Between midnight and 5:30 AM IST, UTC is still in the previous calendar day. <code>Intl.DateTimeFormat</code> with <code>Asia/Kolkata</code> guarantees the date accurately matches Indian Standard Time.</p>
+        </div>
+        <div class="answer-block">
+          <span class="answer-label">Hinglish (Spoken in Interview):</span>
+          <p class="answer-text">"Sir, <code>toISOString()</code> date ko UTC me nikalta hai. India me raat 12 se subah 5:30 tak UTC me pichla din hota hai. <code>Asia/Kolkata</code> use karne se date hamesha correct Indian calendar day ke hisaab se banti hai."</p>
+        </div>
+      </div>
+
+      <div class="qa-card">
+        <div class="question">Q13: Why do tests assert on accessible roles (getByRole) rather than exact text strings?</div>
+        <div class="answer-block">
+          <span class="answer-label">English (Technical Explanation):</span>
+          <p class="answer-text">Testing exact text strings couples test suites to marketing wording. If copy is updated, tests break unnecessarily. Asserting on accessible roles (<code>role='status'</code>, <code>role='alert'</code>, <code>role='button'</code>) tests real user behavior and accessibility contracts according to WCAG.</p>
+        </div>
+        <div class="answer-block">
+          <span class="answer-label">Hinglish (Spoken in Interview):</span>
+          <p class="answer-text">"Sir, exact text test karne se copy badalne par test fail ho jata hai chahe app sahi kaam kar raha ho. <code>getByRole('alert')</code> aur <code>getByRole('status')</code> user accessibility aur behavior ko verify karte hain."</p>
+        </div>
+      </div>
+
+      <div class="qa-card">
+        <div class="question">Q14: Walk me through the 4 states of app/page.jsx and how retry works.</div>
+        <div class="answer-block">
+          <span class="answer-label">English (Technical Explanation):</span>
+          <p class="answer-text">1. Loading: <code>role='status'</code> container. 2. Error: <code>role='alert'</code> with Retry button. 3. Empty: calm informative notice without an alert banner. 4. Success: 4 semantic cards (<code>&lt;article&gt;</code>). Clicking Retry triggers <code>refetch()</code> which increments <code>retryTrigger</code> and starts a fresh fetch.</p>
+        </div>
+        <div class="answer-block">
+          <span class="answer-label">Hinglish (Spoken in Interview):</span>
+          <p class="answer-text">"Sir, chaaro states perfectly handled hain: Loading (status), Error (alert + Retry button), Empty (calm notice without alert), aur Success (4 article cards). Retry button click karne par <code>refetch()</code> fresh fetch trigger karta hai."</p>
+        </div>
+      </div>
+
+      <div class="qa-card">
+        <div class="question">Q15: Why does reading localStorage inside useState cause a hydration mismatch, and how did you solve it?</div>
+        <div class="answer-block">
+          <span class="answer-label">English (Technical Explanation):</span>
+          <p class="answer-text">During server-side pre-rendering (SSR), <code>window</code> is undefined, so the server renders the default city (Bengaluru: 12.9716). In the browser, if <code>localStorage</code> previously saved a different city (Delhi: 28.6139), reading it synchronously during initial <code>useState</code> causes the client's initial HTML to differ from the server HTML, triggering a React Hydration Mismatch. The fix is to initialize state with <code>DEFAULT_CITY.id</code> on both server and client, and synchronize the saved city from <code>localStorage</code> inside <code>useEffect</code>, which only executes after hydration is complete.</p>
+        </div>
+        <div class="answer-block">
+          <span class="answer-label">Hinglish (Spoken in Interview):</span>
+          <p class="answer-text">"Sir, SSR ke time server par <code>localStorage</code> nahi hota, isliye server default city (Bengaluru) render karta hai. Agar hum initial <code>useState</code> me <code>localStorage</code> read karenge toh client par Delhi aa jayega, jisse mismatch ho jayega. Fix ye hai ki <code>useState</code> me default rakho, aur <code>localStorage</code> ko <code>useEffect</code> me read karo kyunki <code>useEffect</code> hydration ke baad chalta hai."</p>
+        </div>
+      </div>
     </main>
   </div>
 </body>
 </html>
+

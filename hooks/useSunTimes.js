@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 /**
  * Custom hook to fetch sunrise and sunset data from sunrise-sunset.org.
@@ -16,20 +16,12 @@ export function useSunTimes({ lat, lng, date } = {}) {
   const [loading, setLoading] = useState(true);
   const [retryTrigger, setRetryTrigger] = useState(0);
 
-  const abortControllerRef = useRef(null);
-
   const refetch = useCallback(() => {
     setRetryTrigger((prev) => prev + 1);
   }, []);
 
   useEffect(() => {
-    // Abort any in-flight request to prevent race conditions
-    if (abortControllerRef.current) {
-      abortControllerRef.current.abort();
-    }
-
     const controller = new AbortController();
-    abortControllerRef.current = controller;
 
     async function fetchTimes() {
       setLoading(true);
@@ -37,14 +29,24 @@ export function useSunTimes({ lat, lng, date } = {}) {
 
       // Validate latitude and longitude inputs
       if (typeof lat !== 'number' || typeof lng !== 'number' || isNaN(lat) || isNaN(lng)) {
-        setLoading(false);
-        setError('Valid geographic coordinates (latitude and longitude) are required.');
-        setData(null);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+          setError('Valid geographic coordinates (latitude and longitude) are required.');
+          setData(null);
+        }
         return;
       }
 
-      // Format query using URLSearchParams (Module 04 requirement: no string concatenation with +)
-      const targetDate = date || new Date().toISOString().split('T')[0];
+      // Build target date in Asia/Kolkata timezone (ISO YYYY-MM-DD), avoiding UTC midnight mismatch
+      const targetDate =
+        date ||
+        new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'Asia/Kolkata',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit',
+        }).format(new Date());
+
       const params = new URLSearchParams({
         lat: String(lat),
         lng: String(lng),
@@ -58,7 +60,7 @@ export function useSunTimes({ lat, lng, date } = {}) {
         const response = await fetch(url, { signal: controller.signal });
 
         if (!response.ok) {
-          throw new Error(`Temporal calculation service error (HTTP ${response.status}).`);
+          throw new Error('Couldn’t load sun times. Check your connection and try again.');
         }
 
         const json = await response.json();
@@ -69,24 +71,39 @@ export function useSunTimes({ lat, lng, date } = {}) {
           throw new Error(
             json.status === 'INVALID_REQUEST'
               ? 'Observation coordinates outside computational range. Please select a valid city.'
-              : `Astronomical data unavailable (${json.status || 'Unknown'}).`
+              : 'Astronomical data unavailable. Please select another city.'
           );
         }
 
-        if (!json.results || !json.results.sunrise || !json.results.sunset) {
-          setData(null); // Triggers empty state
-        } else {
-          setData(json.results);
+        if (!controller.signal.aborted) {
+          if (!json.results || !json.results.sunrise || !json.results.sunset) {
+            setData(null); // Triggers empty state
+          } else {
+            setData(json.results);
+          }
         }
       } catch (err) {
-        if (err.name === 'AbortError') {
-          // Normal cancellation due to user switching city quickly; ignore
+        if (err.name === 'AbortError' || controller.signal.aborted) {
+          // Normal cancellation due to city switch or unmount; ignore
           return;
         }
-        setError(err.message || 'Unable to retrieve solar coordinates. Please verify your connection.');
+
+        // Map network failures and raw fetch errors ("Failed to fetch", TypeError) to a calm, human-friendly message
+        if (
+          err instanceof TypeError ||
+          err.message === 'Failed to fetch' ||
+          err.message.toLowerCase().includes('fetch') ||
+          err.message.toLowerCase().includes('network')
+        ) {
+          setError('Couldn’t load sun times. Check your connection and try again.');
+        } else {
+          setError(err.message || 'Couldn’t load sun times. Check your connection and try again.');
+        }
         setData(null);
       } finally {
-        setLoading(false);
+        if (!controller.signal.aborted) {
+          setLoading(false);
+        }
       }
     }
 
@@ -99,4 +116,3 @@ export function useSunTimes({ lat, lng, date } = {}) {
 
   return { data, error, loading, refetch };
 }
-

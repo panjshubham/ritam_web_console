@@ -1,25 +1,25 @@
 // Client Component: Manages interactive city selection, user event handling, and client-side lifecycle data fetching via custom hook.
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { CITIES, DEFAULT_CITY } from '@/lib/cities';
 import { useSunTimes } from '@/hooks/useSunTimes';
 import { formatSunTime, calculateDayLength } from '@/lib/astronomy';
 
 export default function HomePage() {
-  const [selectedCityId, setSelectedCityId] = useState(() => {
-    if (typeof window !== 'undefined') {
-      try {
-        const saved = localStorage.getItem('ritam_chosen_city');
-        if (saved && CITIES.some((c) => c.id === saved)) {
-          return saved;
-        }
-      } catch (err) {
-        // Fallback gracefully on storage access errors
+  const [selectedCityId, setSelectedCityId] = useState(DEFAULT_CITY.id);
+
+  // Restore saved city from localStorage after client hydration to prevent server/client mismatch
+  useEffect(() => {
+    try {
+      const saved = localStorage.getItem('ritam_chosen_city');
+      if (saved && CITIES.some((c) => c.id === saved)) {
+        setSelectedCityId(saved);
       }
+    } catch (err) {
+      // Fallback gracefully on storage access errors
     }
-    return DEFAULT_CITY.id;
-  });
+  }, []);
 
   const handleCityChange = (e) => {
     const nextCityId = e.target.value;

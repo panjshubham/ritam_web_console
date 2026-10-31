@@ -117,5 +117,17 @@ describe('Practitioners Directory Component (Tests 1, 2, 3)', () => {
     expect(screen.getByRole('heading', { level: 2, name: 'Ananya Vani' })).toBeInTheDocument();
     expect(screen.getByText(/showing 3 of 3 practitioners/i)).toBeInTheDocument();
   });
+
+  it('Test 3b: displays error state with retry button when directory API fails', async () => {
+    global.fetch = vi.fn().mockRejectedValue(new TypeError('Failed to fetch'));
+
+    render(<PractitionersDirectoryPage />);
+
+    const alert = await screen.findByRole('alert');
+    expect(alert).toBeInTheDocument();
+
+    const retryButton = screen.getByRole('button', { name: /retry/i });
+    expect(retryButton).toBeInTheDocument();
+  });
 });
 
