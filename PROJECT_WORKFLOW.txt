@@ -1,0 +1,163 @@
+================================================================================
+RITAM WEB CONSOLE — 8-STEP WORKFLOW BLUEPRINT
+Frontend Onboarding & Project Execution Guide
+Branch: practice/shubham-panjiyara
+================================================================================
+
+--------------------------------------------------------------------------------
+STEP 1: IDEA -> PRD (PRODUCT REQUIREMENTS DOCUMENT)
+--------------------------------------------------------------------------------
+PROBLEM:
+Ops team and onboarding practitioners need a focused administrative web console 
+to inspect daily astronomical solar timings (Panchanga foundation) and browse, 
+filter, and review verified astrologer profiles on both desktop and mobile 
+screens without external backend dependencies, heavy component libraries, or 
+alarmist copy.
+
+TARGET USERS:
+- Ritam Ops & Supply Team: Reviewing astrologer credentials and timings.
+- Astrologers & Practitioners: Reviewing their published profile details on 
+  mobile devices (down to 360px).
+
+CORE FEATURES (SCOPE):
+1. Solar Ephemeris Console (/):
+   - Sunrise, sunset, day length, and solar noon calculations for 4 key Indian 
+     observation nodes (Bengaluru, Kolkata, Delhi, Chennai).
+   - Handles all 4 states: Idle/Loading, Success, Empty, Error (with retry).
+2. Practitioner Directory (/practitioners):
+   - Registry of verified practitioners.
+   - Live filtering by language and specialism via derived state.
+   - Result count ("Showing X of Y practitioners").
+   - URL-synchronized sorting (?sort=experience-desc, name-asc).
+   - Layout-holding 3-card skeleton loading state.
+3. Practitioner Profile Detail (/practitioners/[id]):
+   - Server Component view displaying pseudonym, price band, bio, languages, 
+     and ethics covenant.
+4. Local Mock API Handler (/api/practitioners):
+   - GET: Query parameter filtering (?language=, ?specialism=).
+   - POST: Validated practitioner registration endpoint.
+
+STRICT NON-NEGOTIABLE CONSTRAINTS:
+- Pure CSS with CSS custom properties (variables) defined at :root (FRE-109).
+- Zero raw hex values in component stylesheets.
+- No external UI component libraries (no Tailwind, Radix, shadcn, Chakra, MUI).
+- No external state management (no Redux, Zustand).
+- No external database or authentication layers.
+- Filtering must be derived during render (never stored in useEffect).
+- Responsive down to 360px without horizontal page scroll.
+- Dark mode via prefers-color-scheme and :root[data-theme="dark"].
+- 100% offline-passing test suite with 0 network calls.
+
+--------------------------------------------------------------------------------
+STEP 2: PRD -> TECH STACK
+--------------------------------------------------------------------------------
+- Framework: Next.js (App Router, JavaScript ESM)
+- UI & Styling: Pure handwritten CSS with CSS Custom Properties (:root design tokens)
+- State Management: React built-in useState + derived variables during render
+- Data Layer: Local structured JSON (data/practitioners.json) + Route Handler
+- External Integration: sunrise-sunset.org (lat, lng, date)
+- Test Runner: Vitest (ESM, fast execution, parallel runner)
+- Component Testing: React Testing Library + @testing-library/user-event + jest-dom
+- Test Environment: jsdom (in-memory fake DOM)
+
+--------------------------------------------------------------------------------
+STEP 3: PLAN THE APPLICATION ARCHITECTURE
+--------------------------------------------------------------------------------
+SERVER VS. CLIENT BOUNDARIES:
+- app/layout.jsx: Server Component (shell, metadata, fonts, zero client JS).
+- app/loading.jsx: Server Component (instant loading fallback shell).
+- app/not-found.jsx: Server Component (calm, accessible 404 page).
+- app/practitioners/[id]/page.jsx: Server Component (request-time rendering).
+- app/page.jsx: Client Component ('use client') (city selection & lifecycle fetch).
+- app/practitioners/page.jsx: Client Component ('use client') (filter & sort controls).
+- app/components/ThemeToggle.jsx: Client Component (interactive dark/light toggle).
+
+DATA FLOW:
+User Action -> React State -> Custom Hook / Pure Filter -> UI State (4 States)
+
+--------------------------------------------------------------------------------
+STEP 4: DESIGN THE DATA CONTRACT (NO DATABASE)
+--------------------------------------------------------------------------------
+Schema Definition (data/practitioners.json):
+{
+  "id": "prac-101",
+  "name": "Jyotishi Ananya",
+  "pseudonym": "Ananya Vani",
+  "languages": ["Hindi", "English"],
+  "specialisms": ["Muhurta", "Kundali"],
+  "experienceYears": 14,
+  "priceBand": "₹₹",
+  "bio": "Specialising in auspicious timing calculations (Muhurta)..."
+}
+
+Constraints:
+- Pseudonyms used throughout (no real names).
+- Categorical price bands: ₹, ₹₹, ₹₹₹.
+- Clean JSON format served via /api/practitioners.
+
+--------------------------------------------------------------------------------
+STEP 5: FEATURE IMPLEMENTATION
+--------------------------------------------------------------------------------
+1. lib/astronomy.js: Pure formatting and arithmetic functions.
+2. lib/cities.js: Observation node coordinates.
+3. hooks/useSunTimes.js: Custom hook wrapping fetch with AbortController and 
+   HTTP 200 INVALID_REQUEST error trapping.
+4. app/globals.css: Full design token system (FRE-109) with dark mode media query.
+5. app/page.jsx: Solar timing console with localStorage persistence.
+6. app/practitioners/page.jsx: Directory with derived filtering, URL sorting, 
+   and skeleton loading.
+7. app/practitioners/[id]/page.jsx: Detail view with dynamic metadata.
+8. app/api/practitioners/route.js: GET filtering and POST registration validation.
+
+--------------------------------------------------------------------------------
+STEP 6: CODE REVIEW & CHECKLIST
+--------------------------------------------------------------------------------
+[x] Zero raw hex codes in component rules.
+[x] Derived filter state (no useEffect setting filtered list).
+[x] All 4 states handled explicitly (Loading, Success, Empty, Error with retry).
+[x] sunrise-sunset.org INVALID_REQUEST body trapped even on HTTP 200.
+[x] AbortController race-condition cancellation on fast city toggling.
+[x] Keyboard accessible with visible :focus-visible outlines.
+[x] Every input has an associated <label htmlFor="...">.
+[x] Responsive at 360px without horizontal scroll.
+[x] Calm copy: no countdown timers, urgency badges, or exclamation marks.
+
+--------------------------------------------------------------------------------
+STEP 7: TEST SUITE (24 TESTS, 100% OFFLINE)
+--------------------------------------------------------------------------------
+Run command: npm test
+
+1. test/practitioners.test.jsx:
+   - Test 1: Renders practitioner rows and pseudonyms.
+   - Test 2: Language filter narrows list via derived state.
+   - Test 3: Non-matching filter renders calm empty state (empty ≠ error).
+2. test/sunTimes.test.jsx:
+   - Test 4: role="status" loading indicator while request in flight.
+   - Test 5: Displays formatted sunrise, sunset, day length on success.
+   - Test 6: Traps HTTP 200 INVALID_REQUEST and renders calm error with retry.
+   - Test 6b: Handles network rejections gracefully.
+3. test/apiPractitioners.test.js:
+   - Test 7: GET /api/practitioners returns schema, count, filters by query.
+   - Test 7b: POST /api/practitioners validates inputs and responds with 201 or 400.
+4. test/pureFunctions.test.js:
+   - Test 8: Unit tests for formatSunTime, calculateDayLength, 
+     filterPractitioners, and sortPractitioners across normal and edge cases.
+
+--------------------------------------------------------------------------------
+STEP 8: DEBUGGING GUIDE & SOLUTIONS
+--------------------------------------------------------------------------------
+1. Trap: API returns HTTP 200 with { status: "INVALID_REQUEST" }.
+   Fix: Check json.status !== 'OK' after checking res.ok.
+2. Trap: Out-of-order network responses when switching cities fast.
+   Fix: Store AbortController in ref and call controller.abort() before each fetch.
+3. Trap: Storing filtered list in useEffect causes double renders and stale data.
+   Fix: Calculate const filtered = filterPractitioners(...) directly in render.
+4. Trap: Flex items cause horizontal scroll at 360px.
+   Fix: Set min-width: 0 on flex children and wrap wide tables in overflow-x: auto.
+5. Trap: Dark mode toggle conflicts with OS theme.
+   Fix: Support both @media (prefers-color-scheme: dark) and :root[data-theme] with 
+   color-scheme CSS property.
+
+================================================================================
+END OF BLUEPRINT
+================================================================================
