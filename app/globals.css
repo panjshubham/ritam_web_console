@@ -132,6 +132,116 @@ html, body {
   width: 100%;
 }
 
+/* ── Mobile-first responsive helpers ── */
+
+/* Page heading shrinks on small screens */
+.page-heading {
+  font-family: var(--display);
+  font-size: var(--text-3xl);
+  font-weight: 600;
+  margin: 0 0 var(--space-2);
+  color: var(--ink);
+  line-height: 1.15;
+}
+
+@media (max-width: 480px) {
+  .page-heading {
+    font-size: var(--text-2xl);
+  }
+}
+
+/* Filter toolbar: vertical stack on mobile, row on wider screens */
+.filter-toolbar {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+@media (min-width: 600px) {
+  .filter-toolbar {
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-4);
+  }
+}
+
+/* Each label+select pair */
+.filter-group {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  min-width: 0;
+}
+
+.filter-group label {
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.filter-group select {
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+}
+
+/* Practitioner card grid: single column on mobile */
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-4);
+}
+
+@media (min-width: 560px) {
+  .card-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+/* Sun-times card grid: 2-col on mobile (2×min 160px), 4-col on desktop */
+.sun-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-4);
+}
+
+@media (min-width: 640px) {
+  .sun-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  }
+}
+
+/* City select stretches full width on mobile */
+.city-picker-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.city-picker-row select {
+  flex: 1;
+  min-width: 140px;
+}
+
+/* Nav header row on very narrow screens */
+.site-nav {
+  display: flex;
+  gap: var(--space-3);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+/* Filter toolbar bottom row: count + clear */
+.filter-toolbar-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-3);
+}
+
 /* Accessibility focus styles */
 :focus-visible {
   outline: 2px solid var(--accent);

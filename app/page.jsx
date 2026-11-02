@@ -60,14 +60,8 @@ export default function HomePage() {
         </p>
         <h1
           id="page-heading"
-          style={{
-            fontFamily: 'var(--display)',
-            fontSize: 'var(--text-3xl)',
-            fontWeight: 600,
-            margin: '0 0 var(--space-2)',
-            color: 'var(--ink)',
-            lineHeight: 1.15,
-          }}
+          className="page-heading"
+          style={{ margin: '0 0 var(--space-2)' }}
         >
           Solar Coordinates & Day Division
         </h1>
@@ -94,20 +88,14 @@ export default function HomePage() {
           marginBottom: 'var(--space-6)',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            gap: 'var(--space-4)',
-          }}
-        >
+        <div className="city-picker-row">
           <label
             htmlFor="city-select"
             style={{
               fontSize: 'var(--text-sm)',
               fontWeight: 500,
               color: 'var(--ink)',
+              whiteSpace: 'nowrap',
             }}
           >
             Observation Node:
@@ -124,7 +112,6 @@ export default function HomePage() {
               color: 'var(--ink)',
               fontFamily: 'var(--body)',
               fontSize: 'var(--text-sm)',
-              minWidth: '220px',
             }}
           >
             {CITIES.map((city) => (
@@ -141,7 +128,7 @@ export default function HomePage() {
               color: 'var(--ink-soft)',
             }}
           >
-            Coordinates: {selectedCity.lat.toFixed(4)}°N, {selectedCity.lng.toFixed(4)}°E
+            {selectedCity.lat.toFixed(4)}°N, {selectedCity.lng.toFixed(4)}°E
           </span>
         </div>
       </section>
@@ -188,13 +175,7 @@ export default function HomePage() {
             </div>
 
             {/* Skeleton placeholders */}
-            <div
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-                gap: 'var(--space-4)',
-              }}
-            >
+            <div className="sun-grid">
               {[1, 2, 3, 4].map((n) => (
                 <div
                   key={n}
@@ -295,13 +276,7 @@ export default function HomePage() {
 
         {/* State 4: Success */}
         {!loading && !error && data && (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
-              gap: 'var(--space-4)',
-            }}
-          >
+          <div className="sun-grid">
             {/* Sunrise Card */}
             <article
               className="interactive-card"

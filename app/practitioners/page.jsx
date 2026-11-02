@@ -115,14 +115,8 @@ export default function PractitionersDirectoryPage() {
         </p>
         <h1
           id="directory-heading"
-          style={{
-            fontFamily: 'var(--display)',
-            fontSize: 'var(--text-3xl)',
-            fontWeight: 600,
-            margin: '0 0 var(--space-2)',
-            color: 'var(--ink)',
-            lineHeight: 1.15,
-          }}
+          className="page-heading"
+          style={{ margin: '0 0 var(--space-2)' }}
         >
           Vedic Jyotish & Vastu Specialists
         </h1>
@@ -149,148 +143,102 @@ export default function PractitionersDirectoryPage() {
           marginBottom: 'var(--space-6)',
         }}
       >
-        <div
-          style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            gap: 'var(--space-4)',
-          }}
-        >
-          <div
-            style={{
-              display: 'flex',
-              flexWrap: 'wrap',
-              alignItems: 'center',
-              gap: 'var(--space-4)',
-            }}
-          >
-            {/* Language filter */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-              <label
-                htmlFor="filter-language"
-                style={{
-                  fontSize: 'var(--text-sm)',
-                  fontWeight: 500,
-                  color: 'var(--ink)',
-                }}
-              >
-                Language:
-              </label>
-              <select
-                id="filter-language"
-                value={selectedLanguage}
-                onChange={(e) => setSelectedLanguage(e.target.value)}
-                style={{
-                  padding: 'var(--space-2) var(--space-3)',
-                  backgroundColor: 'var(--surface-2)',
-                  border: '1px solid var(--line)',
-                  borderRadius: 'var(--radius-sm)',
-                  color: 'var(--ink)',
-                  fontFamily: 'var(--body)',
-                  fontSize: 'var(--text-sm)',
-                  minWidth: '150px',
-                }}
-              >
-                <option value="">All Languages</option>
-                {availableLanguages.map((lang) => (
-                  <option key={lang} value={lang}>
-                    {lang}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Specialism filter */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-              <label
-                htmlFor="filter-specialism"
-                style={{
-                  fontSize: 'var(--text-sm)',
-                  fontWeight: 500,
-                  color: 'var(--ink)',
-                }}
-              >
-                Specialism:
-              </label>
-              <select
-                id="filter-specialism"
-                value={selectedSpecialism}
-                onChange={(e) => setSelectedSpecialism(e.target.value)}
-                style={{
-                  padding: 'var(--space-2) var(--space-3)',
-                  backgroundColor: 'var(--surface-2)',
-                  border: '1px solid var(--line)',
-                  borderRadius: 'var(--radius-sm)',
-                  color: 'var(--ink)',
-                  fontFamily: 'var(--body)',
-                  fontSize: 'var(--text-sm)',
-                  minWidth: '160px',
-                }}
-              >
-                <option value="">All Specialisms</option>
-                {availableSpecialisms.map((spec) => (
-                  <option key={spec} value={spec}>
-                    {spec}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Sort order control (Module 09 Stretch requirement) */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)' }}>
-              <label
-                htmlFor="filter-sort"
-                style={{
-                  fontSize: 'var(--text-sm)',
-                  fontWeight: 500,
-                  color: 'var(--ink)',
-                }}
-              >
-                Sort:
-              </label>
-              <select
-                id="filter-sort"
-                value={sortBy}
-                onChange={handleSortChange}
-                style={{
-                  padding: 'var(--space-2) var(--space-3)',
-                  backgroundColor: 'var(--surface-2)',
-                  border: '1px solid var(--line)',
-                  borderRadius: 'var(--radius-sm)',
-                  color: 'var(--ink)',
-                  fontFamily: 'var(--body)',
-                  fontSize: 'var(--text-sm)',
-                  minWidth: '160px',
-                }}
-              >
-                <option value="">Default Order</option>
-                <option value="experience-desc">Experience (High → Low)</option>
-                <option value="experience-asc">Experience (Low → High)</option>
-                <option value="name-asc">Name (A → Z)</option>
-              </select>
-            </div>
-
-            {/* Reset button if filter is active */}
-            {(selectedLanguage || selectedSpecialism || sortBy) && (
-              <button
-                type="button"
-                onClick={handleResetFilters}
-                style={{
-                  backgroundColor: 'transparent',
-                  border: '1px solid var(--line)',
-                  color: 'var(--ink-soft)',
-                  padding: 'var(--space-2) var(--space-3)',
-                  fontSize: 'var(--text-sm)',
-                  borderRadius: 'var(--radius-sm)',
-                }}
-              >
-                Clear Filters
-              </button>
-            )}
+        {/* Filter controls — stack vertically on mobile, wrap on wider screens */}
+        <div className="filter-toolbar">
+          {/* Language filter */}
+          <div className="filter-group">
+            <label
+              htmlFor="filter-language"
+              style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--ink)' }}
+            >
+              Language:
+            </label>
+            <select
+              id="filter-language"
+              value={selectedLanguage}
+              onChange={(e) => setSelectedLanguage(e.target.value)}
+              style={{
+                padding: 'var(--space-2) var(--space-3)',
+                backgroundColor: 'var(--surface-2)',
+                border: '1px solid var(--line)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--ink)',
+                fontFamily: 'var(--body)',
+                fontSize: 'var(--text-sm)',
+              }}
+            >
+              <option value="">All Languages</option>
+              {availableLanguages.map((lang) => (
+                <option key={lang} value={lang}>
+                  {lang}
+                </option>
+              ))}
+            </select>
           </div>
 
+          {/* Specialism filter */}
+          <div className="filter-group">
+            <label
+              htmlFor="filter-specialism"
+              style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--ink)' }}
+            >
+              Specialism:
+            </label>
+            <select
+              id="filter-specialism"
+              value={selectedSpecialism}
+              onChange={(e) => setSelectedSpecialism(e.target.value)}
+              style={{
+                padding: 'var(--space-2) var(--space-3)',
+                backgroundColor: 'var(--surface-2)',
+                border: '1px solid var(--line)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--ink)',
+                fontFamily: 'var(--body)',
+                fontSize: 'var(--text-sm)',
+              }}
+            >
+              <option value="">All Specialisms</option>
+              {availableSpecialisms.map((spec) => (
+                <option key={spec} value={spec}>
+                  {spec}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Sort order control (Module 09 Stretch requirement) */}
+          <div className="filter-group">
+            <label
+              htmlFor="filter-sort"
+              style={{ fontSize: 'var(--text-sm)', fontWeight: 500, color: 'var(--ink)' }}
+            >
+              Sort:
+            </label>
+            <select
+              id="filter-sort"
+              value={sortBy}
+              onChange={handleSortChange}
+              style={{
+                padding: 'var(--space-2) var(--space-3)',
+                backgroundColor: 'var(--surface-2)',
+                border: '1px solid var(--line)',
+                borderRadius: 'var(--radius-sm)',
+                color: 'var(--ink)',
+                fontFamily: 'var(--body)',
+                fontSize: 'var(--text-sm)',
+              }}
+            >
+              <option value="">Default Order</option>
+              <option value="experience-desc">Experience (High → Low)</option>
+              <option value="experience-asc">Experience (Low → High)</option>
+              <option value="name-asc">Name (A → Z)</option>
+            </select>
+          </div>
+        </div>
+
+        {/* Result count + Clear Filters on their own row */}
+        <div className="filter-toolbar-meta">
           {/* Result Count - Module 09 Requirement */}
           <div
             aria-live="polite"
@@ -302,6 +250,24 @@ export default function PractitionersDirectoryPage() {
           >
             Showing {filteredPractitioners.length} of {practitioners.length} practitioners
           </div>
+
+          {/* Reset button if filter is active */}
+          {(selectedLanguage || selectedSpecialism || sortBy) && (
+            <button
+              type="button"
+              onClick={handleResetFilters}
+              style={{
+                backgroundColor: 'transparent',
+                border: '1px solid var(--line)',
+                color: 'var(--ink-soft)',
+                padding: 'var(--space-2) var(--space-3)',
+                fontSize: 'var(--text-sm)',
+                borderRadius: 'var(--radius-sm)',
+              }}
+            >
+              Clear Filters
+            </button>
+          )}
         </div>
       </section>
 
@@ -312,11 +278,7 @@ export default function PractitionersDirectoryPage() {
           <div
             role="status"
             aria-label="Loading practitioner directory"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-              gap: 'var(--space-4)',
-            }}
+            className="card-grid"
           >
             {[1, 2, 3].map((n) => (
               <div
@@ -468,14 +430,8 @@ export default function PractitionersDirectoryPage() {
         {!loading && !error && displayedPractitioners.length > 0 && (
           <ul
             aria-label="Practitioner list"
-            style={{
-              listStyle: 'none',
-              padding: 0,
-              margin: 0,
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(300px, 1fr))',
-              gap: 'var(--space-4)',
-            }}
+            className="card-grid"
+            style={{ listStyle: 'none', padding: 0, margin: 0 }}
           >
             {displayedPractitioners.map((prac) => (
               <li key={prac.id}>
