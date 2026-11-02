@@ -1,14 +1,7 @@
 // Client Component: Next.js route error boundary providing graceful failure capture and reset capabilities.
 'use client';
 
-import { useEffect } from 'react';
-
-export default function GlobalError({ error, reset }) {
-  useEffect(() => {
-    // Log error cleanly for telemetry/debugging
-    console.error('Unhandled route error caught by error boundary:', error);
-  }, [error]);
-
+export default function GlobalError({ reset }) {
   return (
     <div className="page-container" style={{ paddingTop: 'var(--space-10)' }}>
       <div
