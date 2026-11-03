@@ -435,25 +435,14 @@ export default function PractitionersDirectoryPage() {
           >
             {displayedPractitioners.map((prac) => (
               <li key={prac.id}>
-                <article
-                  className="interactive-card"
-                  style={{
-                    backgroundColor: 'var(--surface)',
-                    border: '1px solid var(--line)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: 'var(--space-5)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    height: '100%',
-                  }}
-                >
+                <article className="responsive-card interactive-card">
                   <div>
                     <div
                       style={{
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'baseline',
+                        gap: 'var(--space-2)',
                         marginBottom: 'var(--space-2)',
                       }}
                     >
@@ -478,6 +467,7 @@ export default function PractitionersDirectoryPage() {
                           border: '1px solid var(--line)',
                           padding: '1px var(--space-2)',
                           borderRadius: 'var(--radius-sm)',
+                          flexShrink: 0,
                         }}
                       >
                         {prac.priceBand}
@@ -526,20 +516,7 @@ export default function PractitionersDirectoryPage() {
                   <div>
                     <Link
                       href={`/practitioners/${prac.id}`}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: 'var(--space-1)',
-                        backgroundColor: 'var(--surface-2)',
-                        border: '1px solid var(--line)',
-                        color: 'var(--ink)',
-                        padding: 'var(--space-2) var(--space-3)',
-                        fontSize: 'var(--text-xs)',
-                        fontWeight: 500,
-                        borderRadius: 'var(--radius-sm)',
-                        textDecoration: 'none',
-                        transition: 'border-color 0.15s ease, background-color 0.15s ease',
-                      }}
+                      className="mobile-action-button"
                     >
                       View Profile →
                     </Link>

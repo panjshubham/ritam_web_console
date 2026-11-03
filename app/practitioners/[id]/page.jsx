@@ -102,19 +102,11 @@ export default async function PractitionerDetailPage({ params }) {
       </nav>
 
       {/* Profile Card */}
-      <article
-        style={{
-          backgroundColor: 'var(--surface)',
-          border: '1px solid var(--line)',
-          borderRadius: 'var(--radius-md)',
-          padding: 'var(--space-8) var(--space-6)',
-          maxWidth: '800px',
-        }}
-      >
+      <article className="detail-card">
         <header
           style={{
             borderBottom: '1px solid var(--line-soft)',
-            paddingBottom: 'var(--space-5)',
+            paddingBottom: 'var(--space-4)',
             marginBottom: 'var(--space-5)',
           }}
         >
@@ -123,7 +115,7 @@ export default async function PractitionerDetailPage({ params }) {
               display: 'flex',
               flexWrap: 'wrap',
               justifyContent: 'space-between',
-              alignItems: 'baseline',
+              alignItems: 'flex-start',
               gap: 'var(--space-3)',
             }}
           >
@@ -141,20 +133,12 @@ export default async function PractitionerDetailPage({ params }) {
               >
                 Verified Practitioner Profile
               </span>
-              <h1
-                style={{
-                  fontFamily: 'var(--display)',
-                  fontSize: 'var(--text-3xl)',
-                  fontWeight: 600,
-                  color: 'var(--ink)',
-                  margin: 0,
-                }}
-              >
+              <h1 className="page-heading" style={{ margin: 0 }}>
                 {practitioner.pseudonym}
               </h1>
             </div>
 
-            <div style={{ textAlign: 'right' }}>
+            <div>
               <span
                 style={{
                   fontFamily: 'var(--mono)',
@@ -164,6 +148,7 @@ export default async function PractitionerDetailPage({ params }) {
                   padding: 'var(--space-1) var(--space-3)',
                   borderRadius: 'var(--radius-sm)',
                   backgroundColor: 'var(--surface-2)',
+                  display: 'inline-block',
                 }}
               >
                 Price Band: {practitioner.priceBand}
@@ -211,34 +196,19 @@ export default async function PractitionerDetailPage({ params }) {
               Qualifications & Alignment
             </h2>
 
-            <dl
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'minmax(140px, 180px) 1fr',
-                gap: 'var(--space-3)',
-                margin: 0,
-                fontSize: 'var(--text-sm)',
-              }}
-            >
-              <dt style={{ fontWeight: 600, color: 'var(--ink-soft)' }}>Specialisms:</dt>
-              <dd style={{ margin: 0, color: 'var(--ink)' }}>
-                {practitioner.specialisms?.join(', ')}
-              </dd>
+            <dl className="detail-dl">
+              <dt>Specialisms:</dt>
+              <dd>{practitioner.specialisms?.join(', ')}</dd>
 
-              <dt style={{ fontWeight: 600, color: 'var(--ink-soft)' }}>Consultation Languages:</dt>
-              <dd style={{ margin: 0, color: 'var(--ink)' }}>
-                {practitioner.languages?.join(', ')}
-              </dd>
+              <dt>Consultation Languages:</dt>
+              <dd>{practitioner.languages?.join(', ')}</dd>
 
-              <dt style={{ fontWeight: 600, color: 'var(--ink-soft)' }}>Verified Experience:</dt>
-              <dd style={{ margin: 0, color: 'var(--ink)' }}>
-                {practitioner.experienceYears} Years in continuous practice
-              </dd>
+              <dt>Verified Experience:</dt>
+              <dd>{practitioner.experienceYears} Years in continuous practice</dd>
 
-              <dt style={{ fontWeight: 600, color: 'var(--ink-soft)' }}>Registry ID:</dt>
+              <dt>Registry ID:</dt>
               <dd
                 style={{
-                  margin: 0,
                   fontFamily: 'var(--mono)',
                   fontSize: 'var(--text-xs)',
                   color: 'var(--ink-faint)',

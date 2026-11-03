@@ -24,22 +24,11 @@ export default function RootLayout({ children }) {
           style={{
             borderBottom: '1px solid var(--line)',
             backgroundColor: 'var(--surface)',
-            padding: 'var(--space-4) 0',
+            padding: 'var(--space-3) 0',
           }}
         >
-          <div
-            className="page-container"
-            style={{
-              paddingTop: 0,
-              paddingBottom: 0,
-              display: 'flex',
-              flexWrap: 'wrap',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              gap: 'var(--space-3)',
-            }}
-          >
-            <div>
+          <div className="page-container site-header-inner">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
               <Link
                 href="/"
                 style={{
@@ -74,38 +63,11 @@ export default function RootLayout({ children }) {
               </Link>
             </div>
 
-            <nav
-              aria-label="Main navigation"
-              style={{
-                display: 'flex',
-                gap: 'var(--space-4)',
-                alignItems: 'center',
-              }}
-            >
-              <Link
-                href="/"
-                style={{
-                  color: 'var(--ink)',
-                  fontSize: 'var(--text-sm)',
-                  fontWeight: 500,
-                  textDecoration: 'none',
-                  padding: 'var(--space-1) var(--space-2)',
-                  borderRadius: 'var(--radius-sm)',
-                }}
-              >
+            <nav aria-label="Main navigation" className="site-nav">
+              <Link href="/" className="nav-link">
                 Sun Times
               </Link>
-              <Link
-                href="/practitioners"
-                style={{
-                  color: 'var(--ink)',
-                  fontSize: 'var(--text-sm)',
-                  fontWeight: 500,
-                  textDecoration: 'none',
-                  padding: 'var(--space-1) var(--space-2)',
-                  borderRadius: 'var(--radius-sm)',
-                }}
-              >
+              <Link href="/practitioners" className="nav-link">
                 Practitioners
               </Link>
               <ThemeToggle />
@@ -124,11 +86,11 @@ export default function RootLayout({ children }) {
             color: 'var(--ink-soft)',
             padding: 'var(--space-6) 0',
             marginTop: 'var(--space-10)',
-            fontSize: 'var(--text-xs)',
+            fontSize: 'var(--text-sm)',
           }}
         >
           <div className="page-container" style={{ paddingTop: 0, paddingBottom: 0 }}>
-            <p style={{ margin: 0 }}>
+            <p style={{ margin: 0, lineHeight: 1.5 }}>
               Ritam Temporal Systems · Observational Ephemeris & Panchanga Console · All measurements computed for local coordinates.
             </p>
           </div>

@@ -179,13 +179,9 @@ export default function HomePage() {
               {[1, 2, 3, 4].map((n) => (
                 <div
                   key={n}
-                  className="skeleton-shimmer"
+                  className="sun-card skeleton-shimmer"
                   style={{
-                    backgroundColor: 'var(--surface)',
-                    border: '1px solid var(--line)',
-                    borderRadius: 'var(--radius-md)',
-                    padding: 'var(--space-5)',
-                    height: '140px',
+                    minHeight: '130px',
                   }}
                 />
               ))}
@@ -279,13 +275,9 @@ export default function HomePage() {
           <div className="sun-grid">
             {/* Sunrise Card */}
             <article
-              className="interactive-card"
+              className="sun-card interactive-card"
               style={{
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--line)',
                 borderTop: '3px solid var(--accent)',
-                borderRadius: 'var(--radius-md)',
-                padding: 'var(--space-5)',
               }}
             >
               <span
@@ -301,15 +293,7 @@ export default function HomePage() {
               >
                 Sunrise (Surya Udaya)
               </span>
-              <div
-                style={{
-                  fontFamily: 'var(--display)',
-                  fontSize: 'var(--text-2xl)',
-                  fontWeight: 600,
-                  color: 'var(--ink)',
-                  marginBottom: 'var(--space-1)',
-                }}
-              >
+              <div className="sun-value">
                 {formatSunTime(data.sunrise)}
               </div>
               <p
@@ -325,13 +309,9 @@ export default function HomePage() {
 
             {/* Sunset Card */}
             <article
-              className="interactive-card"
+              className="sun-card interactive-card"
               style={{
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--line)',
                 borderTop: '3px solid var(--brass)',
-                borderRadius: 'var(--radius-md)',
-                padding: 'var(--space-5)',
               }}
             >
               <span
@@ -347,15 +327,7 @@ export default function HomePage() {
               >
                 Sunset (Surya Asta)
               </span>
-              <div
-                style={{
-                  fontFamily: 'var(--display)',
-                  fontSize: 'var(--text-2xl)',
-                  fontWeight: 600,
-                  color: 'var(--ink)',
-                  marginBottom: 'var(--space-1)',
-                }}
-              >
+              <div className="sun-value">
                 {formatSunTime(data.sunset)}
               </div>
               <p
@@ -371,13 +343,9 @@ export default function HomePage() {
 
             {/* Day Length Card */}
             <article
-              className="interactive-card"
+              className="sun-card interactive-card"
               style={{
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--line)',
                 borderTop: '3px solid var(--ok)',
-                borderRadius: 'var(--radius-md)',
-                padding: 'var(--space-5)',
               }}
             >
               <span
@@ -393,15 +361,7 @@ export default function HomePage() {
               >
                 Total Day Length (Dina Mana)
               </span>
-              <div
-                style={{
-                  fontFamily: 'var(--display)',
-                  fontSize: 'var(--text-2xl)',
-                  fontWeight: 600,
-                  color: 'var(--ink)',
-                  marginBottom: 'var(--space-1)',
-                }}
-              >
+              <div className="sun-value">
                 {calculateDayLength(data.sunrise, data.sunset)}
               </div>
               <p
@@ -417,13 +377,9 @@ export default function HomePage() {
 
             {/* Solar Noon Card */}
             <article
-              className="interactive-card"
+              className="sun-card interactive-card"
               style={{
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--line)',
                 borderTop: '3px solid var(--violet)',
-                borderRadius: 'var(--radius-md)',
-                padding: 'var(--space-5)',
               }}
             >
               <span
@@ -439,15 +395,7 @@ export default function HomePage() {
               >
                 Solar Noon (Madhya Ahna)
               </span>
-              <div
-                style={{
-                  fontFamily: 'var(--display)',
-                  fontSize: 'var(--text-2xl)',
-                  fontWeight: 600,
-                  color: 'var(--ink)',
-                  marginBottom: 'var(--space-1)',
-                }}
-              >
+              <div className="sun-value">
                 {formatSunTime(data.solar_noon)}
               </div>
               <p

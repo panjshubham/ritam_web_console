@@ -50,11 +50,12 @@ export function ThemeToggle() {
         color: 'var(--ink)',
         fontSize: 'var(--text-xs)',
         fontFamily: 'var(--mono)',
-        padding: 'var(--space-1) var(--space-2)',
+        padding: 'var(--space-2) var(--space-3)',
         borderRadius: 'var(--radius-sm)',
         display: 'inline-flex',
         alignItems: 'center',
         gap: 'var(--space-1)',
+        minHeight: '40px',
       }}
     >
       <span>Theme:</span>
