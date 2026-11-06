@@ -1,17 +1,20 @@
-// Client Component: Manages interactive light/dark theme toggling, respecting both OS preferences and explicit user overrides (Module 05).
+// Client Component: Manages interactive light/dark theme toggling, defaulting to light mode while allowing user theme selection (Module 05).
 'use client';
 
 import { useState, useEffect } from 'react';
 
 export function ThemeToggle() {
-  const [theme, setTheme] = useState('auto'); // 'auto', 'light', 'dark'
+  const [theme, setTheme] = useState('light');
 
   useEffect(() => {
     try {
       const stored = localStorage.getItem('ritam_theme');
-      if (stored === 'light' || stored === 'dark') {
-        setTheme(stored);
-        document.documentElement.setAttribute('data-theme', stored);
+      if (stored === 'dark') {
+        setTheme('dark');
+        document.documentElement.setAttribute('data-theme', 'dark');
+      } else {
+        setTheme('light');
+        document.documentElement.setAttribute('data-theme', 'light');
       }
     } catch (e) {
       // Fallback on restricted storage access
@@ -19,21 +22,12 @@ export function ThemeToggle() {
   }, []);
 
   const toggleTheme = () => {
-    let nextTheme = 'light';
-    if (theme === 'light') nextTheme = 'dark';
-    else if (theme === 'dark') nextTheme = 'auto';
-    else nextTheme = 'dark'; // if auto, toggle to dark first or toggle light
-
+    const nextTheme = theme === 'dark' ? 'light' : 'dark';
     setTheme(nextTheme);
 
     try {
-      if (nextTheme === 'auto') {
-        localStorage.removeItem('ritam_theme');
-        document.documentElement.removeAttribute('data-theme');
-      } else {
-        localStorage.setItem('ritam_theme', nextTheme);
-        document.documentElement.setAttribute('data-theme', nextTheme);
-      }
+      localStorage.setItem('ritam_theme', nextTheme);
+      document.documentElement.setAttribute('data-theme', nextTheme);
     } catch (e) {
       // Ignore write errors
     }
@@ -43,7 +37,7 @@ export function ThemeToggle() {
     <button
       type="button"
       onClick={toggleTheme}
-      aria-label={`Current theme: ${theme}. Click to switch theme.`}
+      aria-label={`Current theme: ${theme}. Click to switch to ${theme === 'dark' ? 'light' : 'dark'} mode.`}
       style={{
         backgroundColor: 'var(--surface-2)',
         border: '1px solid var(--line)',
@@ -54,12 +48,15 @@ export function ThemeToggle() {
         borderRadius: 'var(--radius-sm)',
         display: 'inline-flex',
         alignItems: 'center',
-        gap: 'var(--space-1)',
+        gap: 'var(--space-2)',
         minHeight: '40px',
+        cursor: 'pointer',
       }}
     >
       <span>Theme:</span>
-      <span style={{ textTransform: 'capitalize', color: 'var(--brass)' }}>{theme}</span>
+      <span style={{ textTransform: 'capitalize', color: 'var(--brass)', fontWeight: 600 }}>
+        {theme === 'dark' ? 'Dark 🌙' : 'Light ☀'}
+      </span>
     </button>
   );
 }
