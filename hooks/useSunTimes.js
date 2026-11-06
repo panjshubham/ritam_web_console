@@ -26,6 +26,7 @@ export function useSunTimes({ lat, lng, date } = {}) {
     async function fetchTimes() {
       setLoading(true);
       setError(null);
+      setData(null);
 
       // Validate latitude and longitude inputs
       if (typeof lat !== 'number' || typeof lng !== 'number' || isNaN(lat) || isNaN(lng)) {
