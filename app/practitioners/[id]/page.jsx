@@ -64,16 +64,7 @@ export default async function PractitionerDetailPage({ params }) {
           </p>
           <Link
             href="/practitioners"
-            style={{
-              display: 'inline-block',
-              backgroundColor: 'var(--surface-2)',
-              border: '1px solid var(--line)',
-              color: 'var(--ink)',
-              padding: 'var(--space-2) var(--space-4)',
-              fontSize: 'var(--text-sm)',
-              borderRadius: 'var(--radius-sm)',
-              textDecoration: 'none',
-            }}
+            className="btn-secondary"
           >
             Browse Registry
           </Link>
@@ -139,18 +130,7 @@ export default async function PractitionerDetailPage({ params }) {
             </div>
 
             <div>
-              <span
-                style={{
-                  fontFamily: 'var(--mono)',
-                  fontSize: 'var(--text-sm)',
-                  color: 'var(--brass)',
-                  border: '1px solid var(--line)',
-                  padding: 'var(--space-1) var(--space-3)',
-                  borderRadius: 'var(--radius-sm)',
-                  backgroundColor: 'var(--surface-2)',
-                  display: 'inline-block',
-                }}
-              >
+              <span className="badge-brass" style={{ fontSize: 'var(--text-sm)', padding: 'var(--space-1) var(--space-3)' }}>
                 Price Band: {practitioner.priceBand}
               </span>
             </div>

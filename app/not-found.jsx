@@ -49,32 +49,10 @@ export default function NotFound() {
           The requested console endpoint is not recognized. Please return to the solar calculations or practitioner directory.
         </p>
         <div style={{ display: 'flex', gap: 'var(--space-3)', justifyContent: 'center' }}>
-          <Link
-            href="/"
-            style={{
-              backgroundColor: 'var(--surface-2)',
-              border: '1px solid var(--line)',
-              color: 'var(--ink)',
-              padding: 'var(--space-2) var(--space-4)',
-              fontSize: 'var(--text-sm)',
-              borderRadius: 'var(--radius-sm)',
-              textDecoration: 'none',
-            }}
-          >
+          <Link href="/" className="btn-secondary">
             Solar Ephemeris
           </Link>
-          <Link
-            href="/practitioners"
-            style={{
-              backgroundColor: 'var(--surface-2)',
-              border: '1px solid var(--line)',
-              color: 'var(--ink)',
-              padding: 'var(--space-2) var(--space-4)',
-              fontSize: 'var(--text-sm)',
-              borderRadius: 'var(--radius-sm)',
-              textDecoration: 'none',
-            }}
-          >
+          <Link href="/practitioners" className="btn-secondary">
             Practitioner Directory
           </Link>
         </div>

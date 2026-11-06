@@ -31,4 +31,9 @@ yarn-error.log*
 .DS_Store
 Thumbs.db
 
+# Audit & temporary scratch reports
+AUDIT_REPORT.md
+LOOP_PERFORMANCE_REPORT.md
 
+
+COMPLETE_FRONTEND_AUDIT_REPORT.md

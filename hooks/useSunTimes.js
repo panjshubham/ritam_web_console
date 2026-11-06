@@ -60,7 +60,7 @@ export function useSunTimes({ lat, lng, date } = {}) {
         const response = await fetch(url, { signal: controller.signal });
 
         if (!response.ok) {
-          throw new Error('Couldn’t load sun times. Check your connection and try again.');
+          throw new Error("Couldn't load sun times. Check your connection and try again.");
         }
 
         const json = await response.json();
@@ -95,9 +95,9 @@ export function useSunTimes({ lat, lng, date } = {}) {
           err.message.toLowerCase().includes('fetch') ||
           err.message.toLowerCase().includes('network')
         ) {
-          setError('Couldn’t load sun times. Check your connection and try again.');
+          setError("Couldn't load sun times. Check your connection and try again.");
         } else {
-          setError(err.message || 'Couldn’t load sun times. Check your connection and try again.');
+          setError(err.message || "Couldn't load sun times. Check your connection and try again.");
         }
         setData(null);
       } finally {
