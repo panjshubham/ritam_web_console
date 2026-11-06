@@ -36,11 +36,22 @@ export function CityPicker({ cities, selectedCityId, selectedCity, onCityChange 
             fontFamily: 'var(--body)',
           }}
         >
-          {cities.map((city) => (
-            <option key={city.id} value={city.id}>
-              {city.name} ({city.state})
-            </option>
-          ))}
+          {cities.map((city) => {
+            const isSelected = city.id === selectedCityId;
+            return (
+              <option
+                key={city.id}
+                value={city.id}
+                style={{
+                  color: isSelected ? 'var(--accent)' : 'var(--ink)',
+                  fontWeight: isSelected ? 600 : 400,
+                  backgroundColor: isSelected ? 'var(--surface-2)' : 'var(--surface)',
+                }}
+              >
+                {isSelected ? `● ${city.name} (${city.state}) — (Active)` : `${city.name} (${city.state})`}
+              </option>
+            );
+          })}
         </select>
 
         <span
