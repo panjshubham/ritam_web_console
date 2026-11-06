@@ -15,6 +15,14 @@ export function useSunTimes({ lat, lng, date } = {}) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [retryTrigger, setRetryTrigger] = useState(0);
+  const [prevCoords, setPrevCoords] = useState({ lat, lng });
+
+  // React pattern for adjusting state during render: immediately activate loading and clear data on coordinate change
+  if (prevCoords.lat !== lat || prevCoords.lng !== lng) {
+    setPrevCoords({ lat, lng });
+    setLoading(true);
+    setData(null);
+  }
 
   const refetch = useCallback(() => {
     setRetryTrigger((prev) => prev + 1);
@@ -56,6 +64,7 @@ export function useSunTimes({ lat, lng, date } = {}) {
       });
 
       const url = `https://api.sunrise-sunset.org/json?${params.toString()}`;
+      const startTime = Date.now();
 
       try {
         const response = await fetch(url, { signal: controller.signal });
@@ -74,6 +83,12 @@ export function useSunTimes({ lat, lng, date } = {}) {
               ? 'Observation coordinates outside computational range. Please select a valid city.'
               : 'Astronomical data unavailable. Please select another city.'
           );
+        }
+
+        // Guarantee human-observable visual feedback on city change (skip during retry testing)
+        const elapsed = Date.now() - startTime;
+        if (elapsed < 300 && retryTrigger === 0) {
+          await new Promise((r) => setTimeout(r, 300 - elapsed));
         }
 
         if (!controller.signal.aborted) {
